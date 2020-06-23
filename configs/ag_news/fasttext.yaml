@@ -1,0 +1,39 @@
+# global parameters
+model_name: fasttext  # 'han', 'fasttext', 'attbilstm', 'textcnn'
+                      # refer to README.md for more info about each model
+
+# dataset parameters
+dataset: ag_news  # 'ag_news', 'dbpedia', 'yelp_review_polarity', 'yelp_review_full', 'yahoo_answers', 'amazon_review_polarity', 'amazon_review_full'
+                  # refer to README.md for more info about each dataset
+dataset_path: /Users/zou/Desktop/Text-Classification/data/ag_news  # folder with dataset
+output_path: /Users/zou/Desktop/Text-Classification/data/outputs/ag_news  # folder with data files saved by preprocess.py
+
+# preprocess parameters
+word_limit: 200
+
+# word embeddings parameters
+word2vec: glove   # 'random': initialize embedding weights randomly
+                  # 'glove': load Glove as pre-trained word embeddings
+word2vec_folder: /Users/zou/Desktop/Text-Classification/data/glove  # only makes sense when `word2vec: glove`
+word2vec_name: glove.6B.300d.txt  # only makes sense when `word2vec: glove`
+emb_size: 256  # word embedding size
+               # only makes sense when `word2vec: random`
+
+# model parameters
+hidden_size: 10
+fine_tune_word_embeddings: True  # fine-tune word embeddings?
+
+# checkpoint saving parameters
+checkpoint_path: /Users/zou/Desktop/Text-Classification/checkpoints  # path to save checkpoints, null if never save checkpoints
+checkpoint_basename: checkpoint_fasttext  # basename of the checkpoint
+
+# training parameters
+start_epoch: 0  # start at this epoch
+batch_size: 64  # batch size
+lr: 0.001  # learning rate
+lr_decay: 0.9  # a factor to multiply learning rate with (0, 1)
+workers: 4  # number of workers for loading data in the DataLoader
+num_epochs: 5  # number of epochs to run
+grad_clip: null  # clip gradients at this value, null if never clip gradients
+print_freq: 2000  # print training status every __ batches
+checkpoint: null  # path to model checkpoint, null if none
