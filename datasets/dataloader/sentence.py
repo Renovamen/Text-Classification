@@ -37,7 +37,7 @@ def load_data(config, split, build_vocab = True):
 
     # Field: a class that storing information about the way of preprocessing
     TEXT = data.Field(sequential = True, tokenize = tokenizer, lower = True, include_lengths = True, batch_first = True, fix_length = config.word_limit)
-    LABEL = data.Field(sequential = False)
+    LABEL = data.Field(sequential = False, unk_token = None) # we don't need <unk> in label
 
     # in our datasets: |  label  |  we don't need  |  text  |
     fields = [('label', LABEL), (None, None), ('text', TEXT)]

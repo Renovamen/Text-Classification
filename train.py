@@ -3,7 +3,7 @@ import torch.backends.cudnn as cudnn
 import torch.optim as optim
 import models
 from training.trainer import Trainer
-from datasets import load_data
+from datasets.dataloader import load_data
 from utils import *
 
 cudnn.benchmark = True  # set to true only if inputs to model are fixed size; otherwise lot of computational overhead
@@ -54,6 +54,7 @@ def set_trainer(config):
         loss_function = loss_function, 
         optimizer = optimizer,
         lr_decay = config.lr_decay,
+        dataset_name = config.dataset,
         word_map = word_map,
         grad_clip = config.grad_clip, 
         print_freq = config.print_freq,

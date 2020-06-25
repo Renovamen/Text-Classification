@@ -36,6 +36,6 @@ Here are somethings different from the original paper:
 
 |    Dataset    |      Test Accuracy (%)       | Training Time per Epoch (RTX 2080 Ti) |
 | :-----------: | :--------------------------: | :-----------------------------------: |
-|    AG News    |             91.0             |                  30s                  |
+|    AG News    |             91.1             |                  23s                  |
 |    DBpedia    |             97.9             |                 2.8m                  |
 | Yahoo Answers | 40.3 (maybe something wrong) |                 4.6m                  |

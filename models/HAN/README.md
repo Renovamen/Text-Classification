@@ -34,6 +34,6 @@ It has two levels of attention mechanisms applied at the word-level and sentence
 
 |    Dataset    | Test Accuracy (%) | Training Time per Epoch (GTX 2080 Ti) |
 | :-----------: | :---------------: | :-----------------------------------: |
-|    AG News    |       92.7        |                  52s                  |
+|    AG News    |       92.7        |                  45s                  |
 |    DBpedia    |       97.9        |                  73s                  |
 | Yahoo Answers |       74.5        |                 2.7m                  |
