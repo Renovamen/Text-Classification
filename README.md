@@ -99,19 +99,37 @@ python test.py --config configs/example.yaml
 &nbsp;
 ## Classify
 
-Ungoing ...
+This is for when you have already trained a model and want to predict a category for a specific sentence:
 
+First modify following things in [`classify.py`](classify.py):
+
+```python
+checkpoint_path = 'str: path_to_your_checkpoint'
+
+# pad limits
+# only makes sense when model_name == 'han'
+sentence_limit_per_doc = 15
+word_limit_per_sentence = 20
+# only makes sense when model_name != 'han'
+word_limit = 200
+```
+
+Then, run:
+
+```bash
+python classify.py
+```
 
 &nbsp;
 ## Performance
 
-Here I report the test accuracy (%) and training time per epoch (in brackets) of each model on various datasets:
+Here I report the test accuracy (%) and training time per epoch (on RTX 2080 Ti, in brackets) of each model on various datasets:
 
-|                         Model                          |  AG News   |   DBpedia   | Yahoo Answers |
-| :----------------------------------------------------: | :--------: | :---------: | :-----------: |
-| [Hierarchical Attention Network](https://github.com/Renovamen/Text-Classification/tree/master/models/HAN) | 92.7 (52s) | 98.2 (70s)  |  74.5 (2.7m)  |
-|         [fastText](https://github.com/Renovamen/Text-Classification/tree/master/models/fastText)          | 91.0 (30s) | 97.9 (2.8m) |       /       |
-|   [Bi-LSTM + Attention ](https://github.com/Renovamen/Text-Classification/tree/master/models/AttBiLSTM)   | 91.2 (68s) | 98.9 (3.8m) |       /       |
+|                            Model                             |  AG News   |   DBpedia   | Yahoo Answers |
+| :----------------------------------------------------------: | :--------: | :---------: | :-----------: |
+| [Hierarchical Attention Network](https://github.com/Renovamen/Text-Classification/tree/master/models/HAN) | 92.7 (45s) | 98.2 (70s)  |  74.5 (2.7m)  |
+| [fastText](https://github.com/Renovamen/Text-Classification/tree/master/models/fastText) | 91.1 (23s) | 97.9 (2.8m) |       /       |
+| [Bi-LSTM + Attention ](https://github.com/Renovamen/Text-Classification/tree/master/models/AttBiLSTM) | 91.2 (58s) | 98.9 (3.8m) |       /       |
 
 
 &nbsp;

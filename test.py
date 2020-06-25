@@ -1,7 +1,7 @@
 import time
 import os
 from tqdm import tqdm
-from datasets import load_data
+from datasets.dataloader import load_data
 from utils import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     # load model
     checkpoint_path = os.path.join(config.checkpoint_path, config.checkpoint_basename + '.pth.tar')
-    model, _, _, _ = load_checkpoint(checkpoint_path, device)
+    model, _, _, _, _, _ = load_checkpoint(checkpoint_path, device)
     model = model.to(device)
     model.eval()
 

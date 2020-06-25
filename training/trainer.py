@@ -16,6 +16,7 @@ attributes:
     loss_function: loss function (cross entropy)
     optimizer: optimizer (Adam)
     lr_decay: a factor in interval (0, 1) to multiply learning rate with
+    dataset_name: dataset name
     word_map: word2ix map
     grad_clip: gradient threshold in clip gradients
     print_freq: print training status every __ batches
@@ -26,7 +27,7 @@ class Trainer:
 
     def __init__(self, num_epochs, start_epoch, train_loader,
                         model, model_name, loss_function, optimizer, lr_decay,
-                        word_map, grad_clip = None, print_freq = 100,
+                        dataset_name, word_map, grad_clip = None, print_freq = 100,
                         checkpoint_path = None, checkpoint_basename = 'checkpoint'):
 
         self.num_epochs = num_epochs
@@ -39,6 +40,7 @@ class Trainer:
         self.optimizer = optimizer
         self.lr_decay = lr_decay
 
+        self.dataset_name = dataset_name
         self.word_map = word_map
         self.print_freq = print_freq
         self.grad_clip = grad_clip
@@ -154,7 +156,9 @@ class Trainer:
                 save_checkpoint(
                     epoch = epoch, 
                     model = self.model, 
+                    model_name = self.model_name,
                     optimizer = self.optimizer, 
+                    dataset_name = self.dataset_name,
                     word_map = self.word_map,
                     checkpoint_path = self.checkpoint_path, 
                     checkpoint_basename = self.checkpoint_basename

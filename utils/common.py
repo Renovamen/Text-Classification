@@ -11,19 +11,23 @@ save a model checkpoint
 input params:
     epoch: epoch number
     model: model
+    model_name: model name
     optimizer: optimizer
-    best_acc: best accuracy achieved so far (not necessarily in this checkpoint)
+    dataset_name: dataset name
     word_map: word2ix map
-    epochs_since_improvement: number of epochs since last improvement
-    is_best: is this checkpoint the best so far?
     checkpoint_path (str): path to save checkpoint
     checkpoint_basename (str): basename of the checkpoint
+    best_acc: best accuracy achieved so far (not necessarily in this checkpoint)
+    is_best: is this checkpoint the best so far?
+    epochs_since_improvement: number of epochs since last improvement
 '''
-def save_checkpoint(epoch, model, optimizer, word_map, checkpoint_path, checkpoint_basename = 'checkpoint'):
+def save_checkpoint(epoch, model, model_name, optimizer, dataset_name, word_map, checkpoint_path, checkpoint_basename = 'checkpoint'):
     state = {
         'epoch': epoch,
         'model': model,
+        'model_name': model_name,
         'optimizer': optimizer,
+        'dataset_name': dataset_name,
         'word_map': word_map
     }
     torch.save(state, os.path.join(checkpoint_path, checkpoint_basename + '.pth.tar'))
@@ -37,17 +41,24 @@ input params:
 
 return ():
     model: /
+    model_name: model name
     optimizer: optimizer to update model's weights
+    dataset_name: dataset name
     word_map: word2ix map
     start_epoch: we should start training the model from __th epoch
 '''
 def load_checkpoint(checkpoint_path, device):
+    
     checkpoint = torch.load(checkpoint_path, map_location = str(device))
+   
     model = checkpoint['model']
+    model_name = checkpoint['model_name']
     optimizer = checkpoint['optimizer']
+    dataset_name = checkpoint['dataset_name']
     word_map = checkpoint['word_map']
     start_epoch = checkpoint['epoch'] + 1
-    return model, optimizer, word_map, start_epoch
+    
+    return model, model_name, optimizer, dataset_name, word_map, start_epoch
 
 
 '''

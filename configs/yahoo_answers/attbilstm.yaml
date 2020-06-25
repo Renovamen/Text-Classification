@@ -27,7 +27,7 @@ fine_tune_word_embeddings: True  # fine-tune word embeddings?
 
 # checkpoint saving parameters
 checkpoint_path: /Users/zou/Desktop/Text-Classification/checkpoints  # path to save checkpoints, null if never save checkpoints
-checkpoint_basename: checkpoint_attbilstm  # basename of the checkpoint
+checkpoint_basename: checkpoint_attbilstm_yahoo  # basename of the checkpoint
 
 # training parameters
 start_epoch: 0  # start at this epoch
