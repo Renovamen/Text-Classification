@@ -27,9 +27,6 @@ class fastText(nn.Module):
         
         # output layer
         self.fc = nn.Linear(hidden_size, n_classes)
-        
-        # softmax
-        self.softmax = nn.Softmax(dim = 1)
     
 
     '''
@@ -66,7 +63,6 @@ class fastText(nn.Module):
         hidden = self.hidden(avg_embeddings) # (batch_size, hidden_size)
         
         # compute probability
-        output = self.fc(hidden) # (batch_size, n_classes)
-        scores = self.softmax(output) # (batch_size, n_classes)
+        scores = self.fc(hidden) # (batch_size, n_classes)
         
         return scores

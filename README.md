@@ -130,6 +130,7 @@ Here I report the test accuracy (%) and training time per epoch (on RTX 2080 Ti,
 | [Hierarchical Attention Network](https://github.com/Renovamen/Text-Classification/tree/master/models/HAN) | 92.7 (45s) | 98.2 (70s)  |  74.5 (2.7m)  |
 | [fastText](https://github.com/Renovamen/Text-Classification/tree/master/models/fastText) | 91.1 (23s) | 97.9 (2.8m) |       /       |
 | [Bi-LSTM + Attention ](https://github.com/Renovamen/Text-Classification/tree/master/models/AttBiLSTM) | 91.2 (58s) | 98.9 (3.8m) |       /       |
+| [TextCNN ](https://github.com/Renovamen/Text-Classification/tree/master/models/TextCNN) | 90.4 (41s) |  98.5 (4m)  |       /       |
 
 
 &nbsp;
