@@ -31,10 +31,19 @@ def test(model, model_name, test_loader):
                 )  # (n_documents, n_classes), (n_documents, max_doc_len_in_batch, max_sent_len_in_batch), (n_documents, max_doc_len_in_batch)
 
             else:
-                text = batch.text[0].to(device)  # (batch_size, word_limit)
-                words_per_sentence = batch.text[1].to(device)  # (batch_size)
-                labels = batch.label.to(device)  # (batch_size)
-                scores = model(text, words_per_sentence)  # (batch_size, n_classes)
+
+                sentences, words_per_sentence, labels = batch
+
+                sentences = sentences.to(device)  # (batch_size, word_limit)
+                words_per_sentence = words_per_sentence.squeeze(1).to(device)  # (batch_size)
+                labels = labels.squeeze(1).to(device)  # (batch_size)
+
+                # for torchtext
+                # sentences = batch.text[0].to(device)  # (batch_size, word_limit)
+                # words_per_sentence = batch.text[1].to(device)  # (batch_size)
+                # labels = batch.label.to(device)  # (batch_size)
+                
+                scores = model(sentences, words_per_sentence)  # (batch_size, n_classes)
 
             # accuracy
             _, predictions = scores.max(dim = 1)  # (n_documents)

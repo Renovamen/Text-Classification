@@ -6,7 +6,7 @@ model_name: han  # 'han', 'fasttext', 'attbilstm', 'textcnn'
 dataset: dbpedia  # 'ag_news', 'dbpedia', 'yelp_review_polarity', 'yelp_review_full', 'yahoo_answers', 'amazon_review_polarity', 'amazon_review_full'
                   # refer to README.md for more info about each dataset
 dataset_path: /Users/zou/Desktop/Text-Classification/data/dbpedia  # folder with dataset
-output_path: /Users/zou/Desktop/Text-Classification/data/outputs/dbpedia  # folder with data files saved by preprocess.py
+output_path: /Users/zou/Desktop/Text-Classification/data/outputs/dbpedia/docs  # folder with data files saved by preprocess.py
 
 # preprocess parameters
 sentence_limit: 15

@@ -6,10 +6,11 @@ model_name: attbilstm  # 'han', 'fasttext', 'attbilstm', 'textcnn'
 dataset: dbpedia  # 'ag_news', 'dbpedia', 'yelp_review_polarity', 'yelp_review_full', 'yahoo_answers', 'amazon_review_polarity', 'amazon_review_full'
                   # refer to README.md for more info about each dataset
 dataset_path: /Users/zou/Desktop/Text-Classification/data/dbpedia  # folder with dataset
-output_path: /Users/zou/Desktop/Text-Classification/data/outputs/dbpedia  # folder with data files saved by preprocess.py
+output_path: /Users/zou/Desktop/Text-Classification/data/outputs/dbpedia/sents  # folder with data files saved by preprocess.py
 
 # preprocess parameters
 word_limit: 200
+min_word_count: 5
 
 # word embeddings parameters
 word2vec: glove   # 'random': initialize embedding weights randomly
