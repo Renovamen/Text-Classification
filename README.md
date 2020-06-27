@@ -31,8 +31,6 @@ You can train following models by configuring `model_name` in config files ([her
 
 - [Pytorch](https://pytorch.org/) 1.5.0
 
-- [torchtext](https://github.com/pytorch/text) 0.5 (along with Pytorch)
-
 
 &nbsp;
 ## Dataset
@@ -55,7 +53,7 @@ Currently, the following datasets proposed in [this paper](https://papers.nips.c
 
 And all of them can be download [here](https://drive.google.com/drive/u/0/folders/0Bz8a_Dbh9Qhbfll6bVpmNUtUcFdjYmF2SEpmZUZUcVNiMUw1TWN6RDV3a0JHT3kxLVhVR2M) (Google Drive). Check out [here](docs/datasets.md) for more info about these datasets.
 
-You should download and unzip them first, then set their path (`dataset_path`) in your conig files. If you want to use other datasets, they may have to be stored in the same format as the above mentioned datasets.
+You should download and unzip them first, then set their path (`dataset_path`) in your config files. If you want to use other datasets, they may have to be stored in the same format as the above mentioned datasets.
 
 &nbsp;
 ## Pre-trained Word Embeddings
