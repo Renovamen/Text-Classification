@@ -17,7 +17,9 @@ This folder contains the implemention of Attention-Based Bi-LSTM proposed in pap
 
 ## Performance
 
-| Dataset | Test Accuracy (%) | Training Time per Epoch (GTX 2080 Ti) |
-| :-----: | :---------------: | :-----------------------------------: |
-| AG News |       91.2        |                  58s                  |
-| DBpedia |       98.9        |                 3.8m                  |
+|    Dataset    | Test Accuracy (%) | Training Time per Epoch (GTX 2080 Ti) |
+| :-----------: | :---------------: | :-----------------------------------: |
+|    AG News    |       92.0        |                  50s                  |
+|    DBpedia    |       99.0        |                 105s                  |
+| Yahoo Answers |       73.5        |                 3.4m                  |
+

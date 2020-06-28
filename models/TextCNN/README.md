@@ -24,6 +24,6 @@ It applies CNN to text classification problem.
 
 |    Dataset    | Test Accuracy (%) | Training Time per Epoch (GTX 2080 Ti) |
 | :-----------: | :---------------: | :-----------------------------------: |
-|    AG News    |       90.4        |                  41s                  |
-|    DBpedia    |       98.5        |                  4m                   |
-| Yahoo Answers |                   |                 7.5m                  |
+|    AG News    |       92.2        |                  24s                  |
+|    DBpedia    |       98.5        |                 100s                  |
+| Yahoo Answers |       72.8        |                  4m                   |

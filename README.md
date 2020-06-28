@@ -67,15 +67,19 @@ Or if you want to randomly initialize the weights of embedding layer (`word2vec:
 &nbsp;
 ## Preprocess
 
-You can skip this step if your chosen model is not `han` (which represents documents in a hierarchical structure), because `torchtext` can be easily used to do the data preprocessing for common text classification models. 
+Although [torchtext](https://github.com/pytorch/text) can be easily used to do the data preprocessing, it loads all data in one go, which occupies too much memory and slows down the training speed, expecially when the dataset is big. 
 
-Otherwise, you should preprocess the data manually and store them locally first (because I have no idea how to use `torchtext` to preprocessing data for `han`):
+Therefore, here I preprocess the data manually and store them locally first (where `configs/test.yaml` is the path to your config file):
 
 ```bash
-python preprocess.py --config configs/example.yaml
+python preprocess.py --config configs/example.yaml 
 ```
 
-Where `configs/test.yaml` is the path to your config file. 
+Then I load data dynamically using Pytorch's Dataloader when training (see [`datasets/dataloader.py`](datasets/dataloader.py)).
+
+The preprocessing including encoding and padding sentences and building word2ix map. This may takes a little time, but in this way, the training can occupy less memory (which means we can have a large batch size) and take less time. For example, I need 4.6 minutes (on RTX 2080 Ti) to train a fastText model on Yahoo Answers dataset for an epoch using torchtext, but only 41 seconds using Dataloader.
+
+[`datasets/abandoned/torchtext.py`](datasets/abandoned/torchtext.py) is the script for loading data via torchtext, you can try it if you have interests.
 
 
 &nbsp;
@@ -123,14 +127,14 @@ python classify.py
 &nbsp;
 ## Performance
 
-Here I report the test accuracy (%) and training time per epoch (on RTX 2080 Ti, in brackets) of each model on various datasets:
+Here I report the test accuracy (%) and training time per epoch (on RTX 2080 Ti) of each model on various datasets:
 
 |                            Model                             |  AG News   |   DBpedia   | Yahoo Answers |
 | :----------------------------------------------------------: | :--------: | :---------: | :-----------: |
 | [Hierarchical Attention Network](https://github.com/Renovamen/Text-Classification/tree/master/models/HAN) | 92.7 (45s) | 98.2 (70s)  |  74.5 (2.7m)  |
-| [fastText](https://github.com/Renovamen/Text-Classification/tree/master/models/fastText) | 91.1 (23s) | 97.9 (2.8m) |       /       |
-| [Bi-LSTM + Attention ](https://github.com/Renovamen/Text-Classification/tree/master/models/AttBiLSTM) | 91.2 (58s) | 98.9 (3.8m) |       /       |
-| [TextCNN ](https://github.com/Renovamen/Text-Classification/tree/master/models/TextCNN) | 90.4 (41s) |  98.5 (4m)  |       /       |
+| [fastText](https://github.com/Renovamen/Text-Classification/tree/master/models/fastText) | 91.6 (8s)  | 97.9 (25s)  |  66.7 (41s)   |
+| [Bi-LSTM + Attention ](https://github.com/Renovamen/Text-Classification/tree/master/models/AttBiLSTM) | 92.0 (50s) | 99.0 (105s) |  73.5 (3.4m)  |
+| [TextCNN ](https://github.com/Renovamen/Text-Classification/tree/master/models/TextCNN) | 92.2 (24s) | 98.5 (100s) |   72.8 (4m)   |
 
 
 &nbsp;

@@ -1,6 +1,5 @@
 '''
-load data from manually preprocessed data (see prepo/document.py)
-(for document classification)
+load data from manually preprocessed data (see datasets/prepocess/)
 '''
 
 from torch.utils.data import Dataset
@@ -39,7 +38,34 @@ class DocDataset(Dataset):
 
 
 '''
-load data from files output by prepo/document.py (for document classification)
+a PyTorch Dataset class to be used in a PyTorch DataLoader to create batches 
+(for sentence classification)
+
+attributes:
+    data_folder: folder where data files are stored
+    split: split, one of 'TRAIN' or 'TEST'
+'''
+class SentDataset(Dataset):
+
+    def __init__(self, data_folder, split):
+        split = split.upper()
+        assert split in {'TRAIN', 'TEST'}
+        self.split = split
+
+        # load data
+        self.data = torch.load(os.path.join(data_folder, split + '_data.pth.tar'))
+
+    def __getitem__(self, i):
+        return torch.LongTensor(self.data['sents'][i]), \
+               torch.LongTensor([self.data['words_per_sentence'][i]]), \
+               torch.LongTensor([self.data['labels'][i]])
+
+    def __len__(self):
+        return len(self.data['labels'])
+
+
+'''
+load data from files output by prepocess.py
 
 input param:
     config (Class): config settings
@@ -69,7 +95,7 @@ def load_data(config, split, build_vocab = True):
     # test
     if split == 'test':
         test_loader = torch.utils.data.DataLoader(
-            DocDataset(config.output_path, 'test'), 
+            DocDataset(config.output_path, 'test') if config.model_name in ['han'] else SentDataset(config.output_path, 'test'),
             batch_size = config.batch_size, 
             shuffle = False,
             num_workers = config.workers, 
@@ -81,7 +107,7 @@ def load_data(config, split, build_vocab = True):
     else:
         # dataloaders
         train_loader = torch.utils.data.DataLoader(
-            DocDataset(config.output_path, 'train'), 
+            DocDataset(config.output_path, 'train') if config.model_name in ['han'] else SentDataset(config.output_path, 'train'),
             batch_size = config.batch_size,
             shuffle = True,
             num_workers = config.workers,

@@ -11,11 +11,11 @@ Here are statistics of some popular classification datasets:
 | AG News                | 4       | 120,000       | 7,600        | 127,600   | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9QhbUDNpeUdjb0wxRms/view?usp=sharing) |
 | Sogou News (Chinese)   | 5       | 450,000       | 60,000       | 510,000   | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9QhbUkVqNEszd0pHaFE/view?usp=sharing) |
 | DBpedia                | 14      | 560,000       | 70,000       | 630,000   | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9QhbQ2Vic1kxMmZZQ1k/view?usp=sharing) |
-| Yelp Review Polarity   | 2       | 560,000       | 38,000       | 598,000   | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9QhbQ2Vic1kxMmZZQ1k/view?usp=sharing) |
+| Yelp Review Polarity   | 2       | 560,000       | 38,000       | 598,000   | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9QhbNUpYQ2N3SGlFaDg/view?usp=sharing) |
 | Yelp Review Full       | 5       | 650,000       | 50,000       | 700,000   | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9QhbZlU4dXhHTFhZQU0/view?usp=sharing) |
 | Yahoo Answers          | 10      | 1,400,000     | 60,000       | 1,460,000 | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9Qhbd2JNdDBsQUdocVU/view?usp=sharing) |
 | Amazon Review Full     | 5       | 3,000,000     | 650,000      | 3,650,000 | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9QhbZVhsUnRWRDhETzA/view?usp=sharing) |
-| Amazon Review Polarity | 2       | 3,600,000     | 400,000      | 4,000,000 | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9QhbZVhsUnRWRDhETzA/view?usp=sharing) |
+| Amazon Review Polarity | 2       | 3,600,000     | 400,000      | 4,000,000 | [Goole Drive](https://drive.google.com/file/d/0Bz8a_Dbh9QhbaW12WVVZS2drcnM/view?usp=sharing) |
 | IMDB                   | 2       | 25,000        | 25,000       | 50,000    | [Link](http://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz) |
 | SST-2                  | 2       | /             | /            | 94.2k     | [Link](http://nlp.stanford.edu/sentiment/trainDevTestTrees_PTB.zip) |
 | SST-5                  | 5       | /             | /            | 56.4k     | [Link](http://nlp.stanford.edu/sentiment/trainDevTestTrees_PTB.zip) |

@@ -1,3 +1,14 @@
+'''
+script for loading data for sentence classification using torchtext (never used)
+
+I abandon this because torchtext loads all data in one go, which occupies 
+too much memory and slows down the training speed, expecially when the dataset 
+is big.
+
+So I finally choose to preprocess data manually (see datasets/prepocess/) and 
+load data dynamically via Pytorch's Dataloader.
+'''
+
 import torch
 from torchtext import data
 from torchtext import datasets
@@ -39,8 +50,18 @@ def load_data(config, split, build_vocab = True):
     TEXT = data.Field(sequential = True, tokenize = tokenizer, lower = True, include_lengths = True, batch_first = True, fix_length = config.word_limit)
     LABEL = data.Field(sequential = False, unk_token = None) # we don't need <unk> in label
 
-    # in our datasets: |  label  |  we don't need  |  text  |
-    fields = [('label', LABEL), (None, None), ('text', TEXT)]
+    # Yahoo Answers
+    if config.dataset == 'yahoo_answers':
+        # |  label  |  text1  |  text2  |  text3  |
+        fields = [('label', LABEL), ('text1', TEXT), ('text2', TEXT), ('text3', TEXT)]
+    # Yelp Review Full, Yelp Review Polarity
+    elif config.dataset in ['yelp_full', 'yelp_polarity']:
+        # |  label  |  text  |
+        fields = [('label', LABEL), ('text', TEXT)]
+    # AG News, DBpedia, Amazon Review Full, Amazon Review Polarity   
+    else:
+        # |  label  |  we don't need  |  text  |
+        fields = [('label', LABEL), (None, None), ('text', TEXT)]
 
     # load data
     train_data, test_data = data.TabularDataset.splits(
@@ -51,7 +72,17 @@ def load_data(config, split, build_vocab = True):
         fields = fields,
         skip_header = False
     )
-
+    
+    # concatenate all text to a single piece of text
+    if config.dataset == 'yahoo_answers':
+        for train_item in train_data:
+            train_item.text = train_item.text1 + train_item.text2 + train_item.text3
+            del train_item.text1, train_item.text2, train_item.text3   
+        train_data.fields = {
+            'label': LABEL, 
+            'text': TEXT
+        }
+        
     if config.word2vec == 'glove':
         # build word2ix map
         # and load Glove as pre-trained word embeddings for words in the word map

@@ -73,6 +73,7 @@ class Trainer:
 
             if self.model_name in ['han']:
                 documents, sentences_per_document, words_per_sentence, labels = batch
+                
                 documents = documents.to(device)  # (batch_size, sentence_limit, word_limit)
                 sentences_per_document = sentences_per_document.squeeze(1).to(device)  # (batch_size)
                 words_per_sentence = words_per_sentence.to(device)  # (batch_size, sentence_limit)
@@ -86,10 +87,18 @@ class Trainer:
                 )  # (n_documents, n_classes), (n_documents, max_doc_len_in_batch, max_sent_len_in_batch), (n_documents, max_doc_len_in_batch)
 
             else:
-                text = batch.text[0].to(device)  # (batch_size, word_limit)
-                words_per_sentence = batch.text[1].to(device)  # (batch_size)
-                labels = batch.label.to(device)  # (batch_size)
-                scores = self.model(text, words_per_sentence)  # (batch_size, n_classes)
+                sentences, words_per_sentence, labels = batch
+
+                sentences = sentences.to(device)  # (batch_size, word_limit)
+                words_per_sentence = words_per_sentence.squeeze(1).to(device)  # (batch_size)
+                labels = labels.squeeze(1).to(device)  # (batch_size)
+                
+                # for torchtext
+                # sentences = batch.text[0].to(device)  # (batch_size, word_limit)
+                # words_per_sentence = batch.text[1].to(device)  # (batch_size)
+                # labels = batch.label.to(device)  # (batch_size)
+
+                scores = self.model(sentences, words_per_sentence)  # (batch_size, n_classes)
 
             # calc loss
             loss = self.loss_function(scores, labels)  # scalar

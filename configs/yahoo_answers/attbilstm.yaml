@@ -6,10 +6,11 @@ model_name: attbilstm  # 'han', 'fasttext', 'attbilstm', 'textcnn'
 dataset: yahoo_answers  # 'ag_news', 'dbpedia', 'yelp_review_polarity', 'yelp_review_full', 'yahoo_answers', 'amazon_review_polarity', 'amazon_review_full'
                   # refer to README.md for more info about each dataset
 dataset_path: /Users/zou/Desktop/Text-Classification/data/yahoo_answers  # folder with dataset
-output_path: /Users/zou/Desktop/Text-Classification/data/outputs/yahoo_answers  # folder with data files saved by preprocess.py
+output_path: /Users/zou/Desktop/Text-Classification/data/outputs/yahoo_answers/sents  # folder with data files saved by preprocess.py
 
 # preprocess parameters
 word_limit: 200
+min_word_count: 5
 
 # word embeddings parameters
 word2vec: glove   # 'random': initialize embedding weights randomly
@@ -31,7 +32,7 @@ checkpoint_basename: checkpoint_attbilstm_yahoo  # basename of the checkpoint
 
 # training parameters
 start_epoch: 0  # start at this epoch
-batch_size: 64  # batch size
+batch_size: 512  # batch size
 lr: 0.001  # learning rate
 lr_decay: 0.9  # a factor to multiply learning rate with (0, 1)
 workers: 4  # number of workers for loading data in the DataLoader
