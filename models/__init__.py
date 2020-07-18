@@ -2,6 +2,7 @@ from .HAN import *
 from .fastText import *
 from .AttBiLSTM import *
 from .TextCNN import *
+from .Transformer import *
 from utils import *
 
 '''
@@ -78,6 +79,19 @@ def setup(config, n_classes, vocab_size, embeddings, emb_size):
             )
         else:
             raise Exception("Convolution layer not supported: ", config.conv_layer)
+    elif config.model_name == 'transformer':
+        model = Transformer(
+            n_classes = n_classes,
+            vocab_size = vocab_size,
+            embeddings = embeddings,
+            d_model = emb_size,
+            word_pad_len = config.word_limit,
+            fine_tune = config.fine_tune_word_embeddings,
+            hidden_size = config.hidden_size,
+            n_heads = config.n_heads, 
+            n_encoders = config.n_encoders,
+            dropout = config.dropout
+        )
     else:
         raise Exception("Model not supported: ", config.model_name)
     
