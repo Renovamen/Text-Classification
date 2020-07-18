@@ -23,6 +23,11 @@ You can train following models by configuring `model_name` in config files ([her
 
     **Convolutional Neural Networks for Sentence Classification.** *Yoon Kim.* EMNLP 2014. [[Paper]](https://www.aclweb.org/anthology/D14-1181.pdf) [[Code]](https://github.com/yoonkim/CNN_sentence)
 
+- [**Transformer**](https://github.com/Renovamen/Text-Classification/tree/master/models/Transformer) (`transformer`)
+
+    **Attention Is All You Need.** *Ashish Vaswani, et al.* NIPS 2017. [[Paper]](https://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf) [[Code]](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py)
+    
+    Here only the encoder part of Transformer is used.
 
 &nbsp;
 ## Environment
@@ -125,7 +130,7 @@ python classify.py
 &nbsp;
 ## Performance
 
-Here I report the test accuracy (%) and training time per epoch (on RTX 2080 Ti) of each model on various datasets:
+Here I report the test accuracy (%) and training time per epoch (on RTX 2080 Ti) of each model on various datasets. Model parameters are not carefully tuned, so better performance can be achieved by some parameter tuning.
 
 |                            Model                             |  AG News   |   DBpedia   | Yahoo Answers |
 | :----------------------------------------------------------: | :--------: | :---------: | :-----------: |
@@ -133,6 +138,7 @@ Here I report the test accuracy (%) and training time per epoch (on RTX 2080 Ti)
 | [fastText](https://github.com/Renovamen/Text-Classification/tree/master/models/fastText) | 91.6 (8s)  | 97.9 (25s)  |  66.7 (41s)   |
 | [Bi-LSTM + Attention ](https://github.com/Renovamen/Text-Classification/tree/master/models/AttBiLSTM) | 92.0 (50s) | 99.0 (105s) |  73.5 (3.4m)  |
 | [TextCNN ](https://github.com/Renovamen/Text-Classification/tree/master/models/TextCNN) | 92.2 (24s) | 98.5 (100s) |   72.8 (4m)   |
+| [Transformer](https://github.com/Renovamen/Text-Classification/tree/master/models/Transformer) | 92.2 (60s) |             |               |
 
 
 &nbsp;

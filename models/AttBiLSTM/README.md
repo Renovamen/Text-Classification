@@ -8,7 +8,7 @@ This folder contains the implemention of Attention-Based Bi-LSTM proposed in pap
 
 ## Overview
 
-![HAN](../../docs/img/AttBiLSTM.png)
+![AttBiLSTM](../../docs/img/AttBiLSTM.png)
 
 - It uses **element-wise sum** (instead of concatenation) to combine the forward and backward pass outputs of bidirectional LSTM.
 

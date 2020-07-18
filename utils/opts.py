@@ -35,7 +35,7 @@ def parse_opt():
     parser.add_argument(
         '--config', 
         type = str, 
-        default = 'configs/ag_news/attbilstm.yaml',
+        default = 'configs/ag_news/transformer.yaml',
         help = 'path to the configuration file (yaml)'
     )
     args = parser.parse_args()

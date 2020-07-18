@@ -1,5 +1,5 @@
 # global parameters
-model_name: attbilstm  # 'han', 'fasttext', 'attbilstm', 'textcnn'
+model_name: attbilstm  # 'han', 'fasttext', 'attbilstm', 'textcnn', 'transformer'
                        # refer to README.md for more info about each model
 
 # dataset parameters
