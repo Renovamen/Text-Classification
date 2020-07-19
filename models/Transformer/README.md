@@ -27,5 +27,5 @@ To make the Transformer work for text classification task, here I only use its e
 |    Dataset    | Test Accuracy (%) | Training Time per Epoch (GTX 2080 Ti) |
 | :-----------: | :---------------: | :-----------------------------------: |
 |    AG News    |       92.2        |                  60s                  |
-|    DBpedia    |                   |                                       |
-| Yahoo Answers |                   |                                       |
+|    DBpedia    |       98.6        |                  8.2m                 |
+| Yahoo Answers |       72.5        |                 14.5m                 |
