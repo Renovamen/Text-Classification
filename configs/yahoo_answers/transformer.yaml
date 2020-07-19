@@ -1,6 +1,6 @@
 # global parameters
-model_name: attbilstm  # 'han', 'fasttext', 'attbilstm', 'textcnn', 'transformer'
-                       # refer to README.md for more info about each model
+model_name: transformer  # 'han', 'fasttext', 'attbilstm', 'textcnn', 'transformer'
+                         # refer to README.md for more info about each model
 
 # dataset parameters
 dataset: yahoo_answers  # 'ag_news', 'dbpedia', 'yelp_review_polarity', 'yelp_review_full', 'yahoo_answers', 'amazon_review_polarity', 'amazon_review_full'
@@ -13,30 +13,31 @@ word_limit: 200
 min_word_count: 5
 
 # word embeddings parameters
-word2vec: glove   # 'random': initialize embedding weights randomly
-                  # 'glove': load Glove as pre-trained word embeddings
+word2vec: glove  # 'random': initialize embedding weights randomly
+                 # 'glove': load Glove as pre-trained word embeddings
 word2vec_folder: /Users/zou/Desktop/Text-Classification/data/glove  # only makes sense when `word2vec: glove`
 word2vec_name: glove.6B.300d.txt  # only makes sense when `word2vec: glove`
 emb_size: 256  # word embedding size
                # only makes sense when `word2vec: random`
 
 # model parameters
-rnn_size: 10  # bi-RNN size
-rnn_layers: 1  # number of layers in bi-RNN
+n_heads: 5  # number of attention heads
+n_encoders: 2  # number of encoder layers
+hidden_size: 512  # size of position-wise feed forward network
 dropout: 0.3  # dropout
 fine_tune_word_embeddings: True  # fine-tune word embeddings?
 
 # checkpoint saving parameters
 checkpoint_path: /Users/zou/Desktop/Text-Classification/checkpoints  # path to save checkpoints, null if never save checkpoints
-checkpoint_basename: checkpoint_attbilstm_yahoo  # basename of the checkpoint
+checkpoint_basename: checkpoint_transformer_yahoo  # basename of the checkpoint
 
 # training parameters
 start_epoch: 0  # start at this epoch
-batch_size: 512  # batch size
+batch_size: 256  # batch size
 lr: 0.001  # learning rate
 lr_decay: 0.9  # a factor to multiply learning rate with (0, 1)
 workers: 4  # number of workers for loading data in the DataLoader
-num_epochs: 5  # number of epochs to run
+num_epochs: 10  # number of epochs to run
 grad_clip: null  # clip gradients at this value, null if never clip gradients
-print_freq: 200  # print training status every __ batches
+print_freq: 500  # print training status every __ batches
 checkpoint: null  # path to model checkpoint, null if none
