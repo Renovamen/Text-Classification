@@ -1,4 +1,5 @@
 import importlib
+from datetime import datetime
 
 class TensorboardWriter():
     def __init__(self, log_dir, enabled):
@@ -33,11 +34,18 @@ class TensorboardWriter():
             'add_text', 'add_histogram', 'add_pr_curve', 'add_embedding'
         }
         self.tag_mode_exceptions = {'add_histogram', 'add_embedding'}
+        self.timer = datetime.now()
 
 
     def set_step(self, step, mode = 'train'):
         self.mode = mode
         self.step = step
+        if step == 0:
+            self.timer = datetime.now()
+        else:
+            duration = datetime.now() - self.timer
+            self.add_scalar('steps_per_second', 1 / duration.total_seconds())
+            self.timer = datetime.now()
 
 
     def __getattr__(self, name):
@@ -55,5 +63,5 @@ class TensorboardWriter():
             try:
                 attr = object.__getattr__(name)
             except AttributeError:
-                raise AttributeError("type object '{}' has no attribute '{}'".format(self.selected_module, name))
+                raise AttributeError("Type object '{}' has no attribute '{}'".format(self.selected_module, name))
             return attr
