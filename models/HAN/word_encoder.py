@@ -32,7 +32,7 @@ class WordEncoder(nn.Module):
             emb_size, word_rnn_size, 
             num_layers = word_rnn_layers, 
             bidirectional = True,
-            dropout = dropout, 
+            dropout = (0 if word_rnn_layers == 1 else dropout), 
             batch_first = True
         )
 

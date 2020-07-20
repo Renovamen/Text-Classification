@@ -46,7 +46,7 @@ class SentenceEncoder(nn.Module):
             2 * word_rnn_size, sentence_rnn_size, 
             num_layers = sentence_rnn_layers,
             bidirectional = True, 
-            dropout = dropout, 
+            dropout = (0 if sentence_rnn_layers == 1 else dropout), 
             batch_first = True
         )
 

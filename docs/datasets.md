@@ -121,7 +121,7 @@ All of the following datasets can be downloaded [here](https://drive.google.com/
 
   A dataset for classifying questions into semantic categories.
 
-  **samples: ** train: 5,452, test: 500
+  **samples:** train: 5,452, test: 500
 
   - TREC-6
 
