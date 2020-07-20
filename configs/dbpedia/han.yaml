@@ -47,5 +47,5 @@ print_freq: 500  # print training status every __ batches
 checkpoint: null  # path to model checkpoint, null if none
 # tensorboard
 tensorboard: True  # enable tensorboard or not?
-log_dir: /Users/zou/Desktop/Text-Classification/logs  # folder for saving logs for tensorboard
-                                                      # only makes sense when `tensorboard: True`
+log_dir: /Users/zou/Desktop/Text-Classification/logs/han  # folder for saving logs for tensorboard
+                                                          # only makes sense when `tensorboard: True`
