@@ -36,6 +36,8 @@ You can train following models by configuring `model_name` in config files ([her
 
 - [Pytorch](https://pytorch.org/) 1.5.0
 
+- [Tensorflow](https://www.tensorflow.org/) 2.0.0 (optional, you don't need this if you disable [tensorboard](https://github.com/tensorflow/tensorboard))
+
 
 &nbsp;
 ## Dataset
@@ -94,7 +96,14 @@ To train a model, just run:
 python train.py --config configs/example.yaml
 ```
 
+If you have enabled the tensorboard (`tensorboard: True` in config files), you can visualize the losses and accuracies during training by:
+
+```bash
+tensorboard --logdir=<your_log_dir>
+```
+
 &nbsp;
+
 ## Test
 
 Test the trained model and compute accuracy on test set:

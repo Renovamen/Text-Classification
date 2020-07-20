@@ -59,7 +59,9 @@ def set_trainer(config):
         grad_clip = config.grad_clip, 
         print_freq = config.print_freq,
         checkpoint_path = config.checkpoint_path, 
-        checkpoint_basename = config.checkpoint_basename
+        checkpoint_basename = config.checkpoint_basename,
+        tensorboard = config.tensorboard, 
+        log_dir = config.log_dir
     )
 
     return trainer

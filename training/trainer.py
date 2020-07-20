@@ -1,6 +1,7 @@
 import time
 import torch
 from utils import *
+from .tensorboard import TensorboardWriter
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -22,13 +23,16 @@ attributes:
     print_freq: print training status every __ batches
     checkpoint_path (str): path to save checkpoints 
     checkpoint_basename (str): basename of the checkpoint
+    tensorboard: enable tensorboard or not?
+    log_dir (str): folder for saving logs for tensorboard
 '''
 class Trainer:
 
     def __init__(self, num_epochs, start_epoch, train_loader,
                         model, model_name, loss_function, optimizer, lr_decay,
                         dataset_name, word_map, grad_clip = None, print_freq = 100,
-                        checkpoint_path = None, checkpoint_basename = 'checkpoint'):
+                        checkpoint_path = None, checkpoint_basename = 'checkpoint',
+                        tensorboard = False, log_dir = None):
 
         self.num_epochs = num_epochs
         self.start_epoch = start_epoch
@@ -48,6 +52,10 @@ class Trainer:
         self.checkpoint_path = checkpoint_path
         self.checkpoint_basename = checkpoint_basename
 
+        # setup visualization writer instance                
+        self.writer = TensorboardWriter(log_dir, tensorboard)
+        self.len_epoch = len(self.train_loader)
+
 
     '''
     one trianing epoch
@@ -61,8 +69,8 @@ class Trainer:
 
         batch_time = AverageMeter()  # forward prop. + back prop. time per batch
         data_time = AverageMeter()  # data loading time per batch
-        losses = AverageMeter()  # cross entropy loss
-        accs = AverageMeter()  # accuracies
+        losses = AverageMeter(tag = 'loss', writer = self.writer)  # cross entropy loss
+        accs = AverageMeter(tag = 'acc', writer = self.writer)  # accuracies
 
         start = time.time()
 
@@ -119,9 +127,13 @@ class Trainer:
             correct_predictions = torch.eq(predictions, labels).sum().item()
             accuracy = correct_predictions / labels.size(0)
 
+            # set step for tensorboard
+            step = (epoch - 1) * self.len_epoch + i
+            self.writer.set_step(step = step, mode = 'train')
+
             # keep track of metrics
-            losses.update(loss.item(), labels.size(0))
             batch_time.update(time.time() - start)
+            losses.update(loss.item(), labels.size(0))
             accs.update(accuracy, labels.size(0))
 
             start = time.time()

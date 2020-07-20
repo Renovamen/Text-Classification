@@ -79,7 +79,9 @@ def clip_gradient(optimizer, grad_clip):
 keeps track of most recent, average, sum, and count of a metric
 '''
 class AverageMeter(object):
-    def __init__(self):
+    def __init__(self, tag = None, writer = None):
+        self.writer = writer
+        self.tag = tag
         self.reset()
 
     def reset(self):
@@ -93,6 +95,10 @@ class AverageMeter(object):
         self.sum += val * n
         self.count += n
         self.avg = self.sum / self.count
+        
+        # tensorboard
+        if self.writer is not None:
+            self.writer.add_scalar(self.tag, val)
 
 
 '''
