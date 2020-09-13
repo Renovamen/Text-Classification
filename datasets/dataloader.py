@@ -1,11 +1,10 @@
 '''
 load data from manually preprocessed data (see datasets/prepocess/)
 '''
-
-from torch.utils.data import Dataset
-import torch
 import os
 import json
+import torch
+from torch.utils.data import Dataset
 from datasets.info import *
 from utils.embedding import *
 
@@ -81,8 +80,8 @@ return:
             train_loader: dataloader for train data 
         build_vocab = True:
             train_loader: dataloader for train data 
-            embeddings: pre-trained word embeddings (None if config.word2vec='random')
-            emb_size: embedding size (config.emb_size if config.word2vec='random')
+            embeddings: pre-trained word embeddings (None if config.embed_pretrain = False)
+            emb_size: embedding size (config.emb_size if config.embed_pretrain = False)
             word_map: word2ix map
             n_classes: number of classes
             vocab_size: size of vocabulary
@@ -129,10 +128,15 @@ def load_data(config, split, build_vocab = True):
             n_classes = len(label_map)
 
             # word embeddings
-            if config.word2vec == 'glove':
+            if config.embed_pretrain == True:
                 # load Glove as pre-trained word embeddings for words in the word map
-                word2vec_path = os.path.join(config.word2vec_folder, config.word2vec_name)
-                embeddings, emb_size = load_embeddings(word2vec_path, word_map)
+                emb_path = os.path.join(config.embed_folder, config.embed_filename)
+                embeddings, emb_size = load_embeddings(
+                    emb_file = os.path.join(config.embed_folder, config.embed_filename), 
+                    word_map = word_map,
+                    output_folder = config.output_path
+                )
+            # or initialize embedding weights randomly
             else:
                 embeddings = None
                 emb_size = config.emb_size

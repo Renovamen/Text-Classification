@@ -1,6 +1,6 @@
 # Text Classification
 
-Pytorch re-implementation of some text classificaiton models.
+PyTorch re-implementation of some text classificaiton models.
 
 &nbsp;
 ## Model List
@@ -34,7 +34,7 @@ You can train following models by configuring `model_name` in config files ([her
 
 - Python 3.7
 
-- [Pytorch](https://pytorch.org/) 1.5.0
+- [PyTorch](https://pytorch.org/) 1.5.0
 
 - [Tensorflow](https://www.tensorflow.org/) 2.0.0 (optional, you don't need this if you disable [tensorboard](https://github.com/tensorflow/tensorboard))
 
@@ -60,19 +60,22 @@ Currently, the following datasets proposed in [this paper](https://papers.nips.c
 
 And all of them can be download [here](https://drive.google.com/drive/u/0/folders/0Bz8a_Dbh9Qhbfll6bVpmNUtUcFdjYmF2SEpmZUZUcVNiMUw1TWN6RDV3a0JHT3kxLVhVR2M) (Google Drive). Check out [here](docs/datasets.md) for more info about these datasets.
 
-You should download and unzip them first, then set their path (`dataset_path`) in your config files. If you want to use other datasets, they may have to be stored in the same format as the above mentioned datasets.
+You should download and unzip them first, then set their path (`dataset_path`) in your config files. If you would like to use other datasets, they may have to be stored in the same format as the above mentioned datasets.
 
 &nbsp;
 ## Pre-trained Word Embeddings
 
-If you want to initialize the weights of word embedding layer with pre-trained embeddings ([GloVe](https://github.com/stanfordnlp/GloVe)), in other words, you set `word2vec: glove` in your config files, you have to download the pre-trained embeddings first and then set their path (`word2vec_folder` and `word2vec_name`) in conig files. If you want to use other pre-trained embeddings, they may have to be stored in the same format as GloVe.
+If you would like to use pre-trained word embeddings (like [GloVe](https://github.com/stanfordnlp/GloVe)), just set `embed_pretrain = True` and the path to the pre-trained vectors file (`embed_folder` and `embed_filename`) in your config files. You could also choose to fine-tune or not with the `fine_tune_embeddings` parameter.
 
-Or if you want to randomly initialize the weights of embedding layer (`word2vec: random`), you need to specify the size of embedding layer (`emb_size`) in config files.
+The `load_embeddings` method (in [`utils/embedding.py`](utils/embedding.py)) would create a cache under folder `dataset_output_path`, so that it could load the embeddings quicker the next time.
+
+Or if you want to randomly initialize the embedding layer's weights, set `embed_pretrain = False` and specify the size of embedding layer (`embed_size`).
+
 
 &nbsp;
 ## Preprocess
 
-Although [torchtext](https://github.com/pytorch/text) can be easily used to do the data preprocessing, it loads all data in one go, which occupies too much memory and slows down the training speed, expecially when the dataset is big. 
+Although [torchtext](https://github.com/pytorch/text) can be used to perform data preprocessing easily, it loads all data in one go and occupies too much memory and slows down the training speed, expecially when the dataset is big. 
 
 Therefore, here I preprocess the data manually and store them locally first (where `configs/test.yaml` is the path to your config file):
 
@@ -80,7 +83,7 @@ Therefore, here I preprocess the data manually and store them locally first (whe
 python preprocess.py --config configs/example.yaml 
 ```
 
-Then I load data dynamically using Pytorch's Dataloader when training (see [`datasets/dataloader.py`](datasets/dataloader.py)).
+Then I load data dynamically using PyTorch's Dataloader when training (see [`datasets/dataloader.py`](datasets/dataloader.py)).
 
 The preprocessing including encoding and padding sentences and building word2ix map. This may takes a little time, but in this way, the training can occupy less memory (which means we can have a large batch size) and take less time. For example, I need 4.6 minutes (on RTX 2080 Ti) to train a fastText model on Yahoo Answers dataset for an epoch using torchtext, but only 41 seconds using Dataloader.
 

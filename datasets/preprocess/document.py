@@ -1,5 +1,5 @@
 '''
-script for preprocessing data for document classification
+preprocess data for document classification
 '''
 
 import torch

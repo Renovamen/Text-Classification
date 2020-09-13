@@ -1,5 +1,5 @@
 '''
-script for preprocessing data for sentence classification
+preprocess data for sentence classification
 '''
 
 import torch
