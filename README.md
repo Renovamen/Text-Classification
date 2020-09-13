@@ -87,7 +87,7 @@ Then I load data dynamically using PyTorch's Dataloader when training (see [`dat
 
 The preprocessing including encoding and padding sentences and building word2ix map. This may takes a little time, but in this way, the training can occupy less memory (which means we can have a large batch size) and take less time. For example, I need 4.6 minutes (on RTX 2080 Ti) to train a fastText model on Yahoo Answers dataset for an epoch using torchtext, but only 41 seconds using Dataloader.
 
-[`datasets/abandoned/torchtext.py`](datasets/abandoned/torchtext.py) is the script for loading data via torchtext, you can try it if you have interests.
+[`torchtext.py`](https://github.com/Renovamen/Text-Classification/blob/abandoned/datasets/torchtext.py) is the script for loading data via torchtext, you can try it if you have interests.
 
 
 &nbsp;
