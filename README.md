@@ -65,11 +65,11 @@ You should download and unzip them first, then set their path (`dataset_path`) i
 &nbsp;
 ## Pre-trained Word Embeddings
 
-If you would like to use pre-trained word embeddings (like [GloVe](https://github.com/stanfordnlp/GloVe)), just set `embed_pretrain = True` and the path to the pre-trained vectors file (`embed_folder` and `embed_filename`) in your config files. You could also choose to fine-tune or not with the `fine_tune_embeddings` parameter.
+If you would like to use pre-trained word embeddings (like [GloVe](https://github.com/stanfordnlp/GloVe)), just set `emb_pretrain = True` and the path to the pre-trained vectors file (`emb_folder` and `emb_filename`) in your config files. You could also choose to fine-tune or not with the `fine_tune_embeddings` parameter.
 
 The `load_embeddings` method (in [`utils/embedding.py`](utils/embedding.py)) would create a cache under folder `dataset_output_path`, so that it could load the embeddings quicker the next time.
 
-Or if you want to randomly initialize the embedding layer's weights, set `embed_pretrain = False` and specify the size of embedding layer (`embed_size`).
+Or if you want to randomly initialize the embedding layer's weights, set `emb_pretrain = False` and specify the size of embedding layer (`embed_size`).
 
 
 &nbsp;

@@ -13,12 +13,12 @@ word_limit: 200
 min_word_count: 5
 
 # word embeddings parameters
-embed_pretrain: True  # false: initialize embedding weights randomly
-                      # true: load pre-trained word embeddings
-embed_folder: /Users/zou/Desktop/Text-Classification/data/glove  # only makes sense when `embed_pretrain: True`
-embed_filename: glove.6B.300d.txt  # only makes sense when `embed_pretrain: True`
+emb_pretrain: True  # false: initialize embedding weights randomly
+                    # true: load pre-trained word embeddings
+emb_folder: /Users/zou/Desktop/Text-Classification/data/glove  # only makes sense when `emb_pretrain: True`
+emb_filename: glove.6B.300d.txt  # only makes sense when `emb_pretrain: True`
 emb_size: 256  # word embedding size
-               # only makes sense when `embed_pretrain: False`
+               # only makes sense when `emb_pretrain: False`
 fine_tune_word_embeddings: True  # fine-tune word embeddings?
 
 # model parameters

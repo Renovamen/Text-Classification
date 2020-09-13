@@ -80,8 +80,8 @@ return:
             train_loader: dataloader for train data 
         build_vocab = True:
             train_loader: dataloader for train data 
-            embeddings: pre-trained word embeddings (None if config.embed_pretrain = False)
-            emb_size: embedding size (config.emb_size if config.embed_pretrain = False)
+            embeddings: pre-trained word embeddings (None if config.emb_pretrain = False)
+            emb_size: embedding size (config.emb_size if config.emb_pretrain = False)
             word_map: word2ix map
             n_classes: number of classes
             vocab_size: size of vocabulary
@@ -128,11 +128,11 @@ def load_data(config, split, build_vocab = True):
             n_classes = len(label_map)
 
             # word embeddings
-            if config.embed_pretrain == True:
+            if config.emb_pretrain == True:
                 # load Glove as pre-trained word embeddings for words in the word map
-                emb_path = os.path.join(config.embed_folder, config.embed_filename)
+                emb_path = os.path.join(config.emb_folder, config.emb_filename)
                 embeddings, emb_size = load_embeddings(
-                    emb_file = os.path.join(config.embed_folder, config.embed_filename), 
+                    emb_file = os.path.join(config.emb_folder, config.emb_filename), 
                     word_map = word_map,
                     output_folder = config.output_path
                 )
