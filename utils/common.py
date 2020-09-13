@@ -1,7 +1,3 @@
-'''
-script for common utility functions
-'''
-
 import torch
 import os
 
