@@ -1,8 +1,9 @@
 # Bi-LSTM + Attention
 
-This folder contains the implemention of Attention-Based Bi-LSTM proposed in paper:
+This folder contains the implementation of Attention-Based Bi-LSTM proposed in paper:
 
 **Attention-Based Bidirectional Long Short-Term Memory Networks for Relation Classification.** *Peng Zhou, et al.* ACL 2016. [[Paper]](https://www.aclweb.org/anthology/P16-2034.pdf)
+
 
 &nbsp;
 
@@ -22,4 +23,3 @@ This folder contains the implemention of Attention-Based Bi-LSTM proposed in pap
 |    AG News    |       92.0        |                  50s                  |
 |    DBpedia    |       99.0        |                 105s                  |
 | Yahoo Answers |       73.5        |                 3.4m                  |
-

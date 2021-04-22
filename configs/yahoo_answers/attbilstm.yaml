@@ -5,8 +5,8 @@ model_name: attbilstm  # 'han', 'fasttext', 'attbilstm', 'textcnn', 'transformer
 # dataset parameters
 dataset: yahoo_answers  # 'ag_news', 'dbpedia', 'yelp_review_polarity', 'yelp_review_full', 'yahoo_answers', 'amazon_review_polarity', 'amazon_review_full'
                         # refer to README.md for more info about each dataset
-dataset_path: /Users/zou/Desktop/Text-Classification/data/yahoo_answers  # folder with dataset
-output_path: /Users/zou/Desktop/Text-Classification/data/outputs/yahoo_answers/sents  # folder with data files saved by preprocess.py
+dataset_path: /Users/zou/Renovamen/Developing/Text-Classification/data/yahoo_answers  # folder with dataset
+output_path: /Users/zou/Renovamen/Developing/Text-Classification/data/outputs/yahoo_answers/sents  # folder with data files saved by preprocess.py
 
 # preprocess parameters
 word_limit: 200
@@ -15,7 +15,7 @@ min_word_count: 5
 # word embeddings parameters
 emb_pretrain: True  # false: initialize embedding weights randomly
                     # true: load pre-trained word embeddings
-emb_folder: /Users/zou/Desktop/Text-Classification/data/glove  # only makes sense when `emb_pretrain: True`
+emb_folder: /Users/zou/Renovamen/Developing/Text-Classification/data/glove  # only makes sense when `emb_pretrain: True`
 emb_filename: glove.6B.300d.txt  # only makes sense when `emb_pretrain: True`
 emb_size: 256  # word embedding size
                # only makes sense when `emb_pretrain: False`
@@ -27,7 +27,7 @@ rnn_layers: 1  # number of layers in bi-RNN
 dropout: 0.3  # dropout
 
 # checkpoint saving parameters
-checkpoint_path: /Users/zou/Desktop/Text-Classification/checkpoints  # path to save checkpoints, null if never save checkpoints
+checkpoint_path: /Users/zou/Renovamen/Developing/Text-Classification/checkpoints  # path to save checkpoints, null if never save checkpoints
 checkpoint_basename: checkpoint_attbilstm_yahoo  # basename of the checkpoint
 
 # training parameters
@@ -42,5 +42,4 @@ print_freq: 200  # print training status every __ batches
 checkpoint: null  # path to model checkpoint, null if none
 # tensorboard
 tensorboard: True  # enable tensorboard or not?
-log_dir: /Users/zou/Desktop/Text-Classification/logs/attbilstm  # folder for saving logs for tensorboard
-                                                                # only makes sense when `tensorboard: True`
+log_dir: /Users/zou/Renovamen/Developing/Text-Classification/logs/attbilstm  # folder to save logs for tensorboard, only makes sense when `tensorboard: True`

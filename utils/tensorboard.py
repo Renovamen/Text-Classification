@@ -1,8 +1,23 @@
 import importlib
+from typing import Optional, Callable
 from datetime import datetime
 
-class TensorboardWriter():
-    def __init__(self, log_dir, enabled):
+class TensorboardWriter:
+    """
+    Log metrics into a directory for visualization within the TensorBoard.
+
+    Parameters
+    ----------
+    log_dir : str, optional
+        Paht to the folder to save logs for TensorBoard
+
+    enabled : bool, optional, default=False
+        Enable TensorBoard or not
+    """
+
+    def __init__(
+        self, log_dir: Optional[str] = None, enabled: bool = False
+    ):
         self.writer = None
         self.selected_module = ""
 
@@ -36,8 +51,7 @@ class TensorboardWriter():
         self.tag_mode_exceptions = {'add_histogram', 'add_embedding'}
         self.timer = datetime.now()
 
-
-    def set_step(self, step, mode = 'train'):
+    def set_step(self, step: int, mode: str = 'train') -> None:
         self.mode = mode
         self.step = step
         if step == 0:
@@ -47,8 +61,7 @@ class TensorboardWriter():
             self.add_scalar('steps_per_second', 1 / duration.total_seconds())
             self.timer = datetime.now()
 
-
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Callable:
         if name in self.tb_writer_ftns:
             add_data = getattr(self.writer, name, None)
 

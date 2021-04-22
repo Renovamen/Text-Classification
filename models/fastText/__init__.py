@@ -1,1 +1,1 @@
-from .fasttext import *
+from .fasttext import fastText

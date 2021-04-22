@@ -1,43 +1,92 @@
 import time
+from typing import Optional, Dict
 import torch
-from utils import *
-from .tensorboard import TensorboardWriter
+from torch import nn, optim
+from torch.utils.data import DataLoader
+
+from utils import TensorboardWriter, AverageMeter, save_checkpoint, \
+    clip_gradient, adjust_learning_rate
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-'''
-trainer object for constructing a training pipeline
 
-attributes:
-    num_epochs: we should train the model for __ epochs
-    start_epoch: we should start training the model from __th epoch
-    train_loader: dataloader for training data
-    model: text classification model
-    model_name: model name
-    loss_function: loss function (cross entropy)
-    optimizer: optimizer (Adam)
-    lr_decay: a factor in interval (0, 1) to multiply learning rate with
-    dataset_name: dataset name
-    word_map: word2ix map
-    grad_clip: gradient threshold in clip gradients
-    print_freq: print training status every __ batches
-    checkpoint_path (str): path to save checkpoints 
-    checkpoint_basename (str): basename of the checkpoint
-    tensorboard: enable tensorboard or not?
-    log_dir (str): folder for saving logs for tensorboard
-'''
 class Trainer:
+    """
+    Training pipeline
 
-    def __init__(self, num_epochs, start_epoch, train_loader,
-                        model, model_name, loss_function, optimizer, lr_decay,
-                        dataset_name, word_map, grad_clip = None, print_freq = 100,
-                        checkpoint_path = None, checkpoint_basename = 'checkpoint',
-                        tensorboard = False, log_dir = None):
+    Parameters
+    ----------
+    num_epochs : int
+        We should train the model for __ epochs
 
+    start_epoch : int
+        We should start training the model from __th epoch
+
+    train_loader : DataLoader
+        DataLoader for training data
+
+    model : nn.Module
+        Model
+
+    model_name : str
+        Name of the model
+
+    loss_function : nn.Module
+        Loss function (cross entropy)
+
+    optimizer : optim.Optimizer
+        Optimizer (Adam)
+
+    lr_decay : float
+        A factor in interval (0, 1) to multiply the learning rate with
+
+    dataset_name : str
+        Name of the dataset
+
+    word_map : Dict[str, int]
+        Word2id map
+
+    grad_clip : float, optional
+        Gradient threshold in clip gradients
+
+    print_freq : int
+        Print training status every __ batches
+
+    checkpoint_path : str, optional
+        Path to the folder to save checkpoints
+
+    checkpoint_basename : str, optional, default='checkpoint'
+        Basename of the checkpoint
+
+    tensorboard : bool, optional, default=False
+        Enable tensorboard or not?
+
+    log_dir : str, optional
+        Path to the folder to save logs for tensorboard
+    """
+    def __init__(
+        self,
+        num_epochs: int,
+        start_epoch: int,
+        train_loader: DataLoader,
+        model: nn.Module,
+        model_name: str,
+        loss_function: nn.Module,
+        optimizer,
+        lr_decay: float,
+        dataset_name: str,
+        word_map: Dict[str, int],
+        grad_clip = Optional[None],
+        print_freq: int = 100,
+        checkpoint_path: Optional[str] = None,
+        checkpoint_basename: str = 'checkpoint',
+        tensorboard: bool = False,
+        log_dir: Optional[str] = None
+    ) -> None:
         self.num_epochs = num_epochs
         self.start_epoch = start_epoch
         self.train_loader = train_loader
-        
+
         self.model = model
         self.model_name = model_name
         self.loss_function = loss_function
@@ -52,36 +101,35 @@ class Trainer:
         self.checkpoint_path = checkpoint_path
         self.checkpoint_basename = checkpoint_basename
 
-        # setup visualization writer instance                
+        # setup visualization writer instance
         self.writer = TensorboardWriter(log_dir, tensorboard)
         self.len_epoch = len(self.train_loader)
 
+    def train(self, epoch: int) -> None:
+        """
+        Train an epoch
 
-    '''
-    one trianing epoch
-
-    input param:
-        epoch: current epoch num
-    '''
-    def train(self, epoch):
-
+        Parameters
+        ----------
+        epoch : int
+            Current number of epoch
+        """
         self.model.train()  # training mode enables dropout
 
         batch_time = AverageMeter()  # forward prop. + back prop. time per batch
         data_time = AverageMeter()  # data loading time per batch
-        losses = AverageMeter(tag = 'loss', writer = self.writer)  # cross entropy loss
-        accs = AverageMeter(tag = 'acc', writer = self.writer)  # accuracies
+        losses = AverageMeter(tag='loss', writer=self.writer)  # cross entropy loss
+        accs = AverageMeter(tag='acc', writer=self.writer)  # accuracies
 
         start = time.time()
 
         # batches
         for i, batch in enumerate(self.train_loader):
-
             data_time.update(time.time() - start)
 
             if self.model_name in ['han']:
                 documents, sentences_per_document, words_per_sentence, labels = batch
-                
+
                 documents = documents.to(device)  # (batch_size, sentence_limit, word_limit)
                 sentences_per_document = sentences_per_document.squeeze(1).to(device)  # (batch_size)
                 words_per_sentence = words_per_sentence.to(device)  # (batch_size, sentence_limit)
@@ -89,7 +137,7 @@ class Trainer:
 
                 # forward
                 scores, _, _ = self.model(
-                    documents, 
+                    documents,
                     sentences_per_document,
                     words_per_sentence
                 )  # (n_documents, n_classes), (n_documents, max_doc_len_in_batch, max_sent_len_in_batch), (n_documents, max_doc_len_in_batch)
@@ -100,7 +148,7 @@ class Trainer:
                 sentences = sentences.to(device)  # (batch_size, word_limit)
                 words_per_sentence = words_per_sentence.squeeze(1).to(device)  # (batch_size)
                 labels = labels.squeeze(1).to(device)  # (batch_size)
-                
+
                 # for torchtext
                 # sentences = batch.text[0].to(device)  # (batch_size, word_limit)
                 # words_per_sentence = batch.text[1].to(device)  # (batch_size)
@@ -129,7 +177,7 @@ class Trainer:
 
             # set step for tensorboard
             step = (epoch - 1) * self.len_epoch + i
-            self.writer.set_step(step = step, mode = 'train')
+            self.writer.set_step(step=step, mode='train')
 
             # keep track of metrics
             batch_time.update(time.time() - start)
@@ -145,29 +193,26 @@ class Trainer:
                     'Batch Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                     'Data Load Time {data_time.val:.3f} ({data_time.avg:.3f})\t'
                     'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                    'Accuracy {acc.val:.3f} ({acc.avg:.3f})'.format(epoch, i, len(self.train_loader),
-                                                                    batch_time = batch_time,
-                                                                    data_time = data_time, 
-                                                                    loss = losses,
-                                                                    acc = accs)
+                    'Accuracy {acc.val:.3f} ({acc.avg:.3f})'.format(
+                        epoch, i, len(self.train_loader),
+                        batch_time = batch_time,
+                        data_time = data_time,
+                        loss = losses,
+                        acc = accs
+                    )
                 )
-    
 
-    '''
-    runs the training pipeline with all given parameters in Trainer
-    '''
     def run_train(self):
-
         start = time.time()
-        
+
         # epochs
         for epoch in range(self.start_epoch, self.num_epochs):
             # trian an epoch
-            self.train(epoch = epoch)
+            self.train(epoch=epoch)
 
             # time per epoch
             epoch_time = time.time() - start
-            print('Epoch: [{0}] finished, time consumed: {epoch_time:.3f}'.format(epoch, epoch_time = epoch_time))
+            print('Epoch: [{0}] finished, time consumed: {epoch_time:.3f}'.format(epoch, epoch_time=epoch_time))
 
             # decay learning rate every epoch
             adjust_learning_rate(self.optimizer, self.lr_decay)
@@ -175,14 +220,14 @@ class Trainer:
             # save checkpoint
             if self.checkpoint_path is not None:
                 save_checkpoint(
-                    epoch = epoch, 
-                    model = self.model, 
+                    epoch = epoch,
+                    model = self.model,
                     model_name = self.model_name,
-                    optimizer = self.optimizer, 
+                    optimizer = self.optimizer,
                     dataset_name = self.dataset_name,
                     word_map = self.word_map,
-                    checkpoint_path = self.checkpoint_path, 
+                    checkpoint_path = self.checkpoint_path,
                     checkpoint_basename = self.checkpoint_basename
                 )
-            
+
             start = time.time()

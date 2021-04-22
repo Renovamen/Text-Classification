@@ -1,17 +1,17 @@
 import os
 import json
+from nltk.tokenize import PunktSentenceTokenizer, TreebankWordTokenizer
+from typing import Tuple, Dict
 import torch
 from torch import nn
-from nltk.tokenize import PunktSentenceTokenizer, TreebankWordTokenizer
-from datasets.preprocess import get_clean_text
-from datasets.info import get_label_map
-from datasets.dataloader import load_data
+
+from datasets import get_clean_text, get_label_map, load_data
 from utils import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # path to the checkpoint
-checkpoint_path = '/Users/zou/Desktop/Text-Classification/checkpoints/checkpoint_fasttext.pth.tar'
+checkpoint_path = '/Users/zou/Renovamen/Developing/Text-Classification/checkpoints/checkpoint_fasttext_agnews.pth.tar'
 
 # pad limits
 # only makes sense when model_name = 'han'
@@ -21,20 +21,31 @@ word_limit_per_sentence = 20
 word_limit = 200
 
 
-'''
-preprocess a document into a hierarchial representation
+def prepro_doc(
+    document: str, word_map: Dict[str, int]
+) -> Tuple[torch.LongTensor, torch.LongTensor, torch.LongTensor]:
+    """
+    Preprocess a document into a hierarchial representation
 
-input param:
-    document (str): a document in text form
-    word_map: word2ix map
+    Parameters
+    ----------
+    document : str
+        A document in text form
 
-return: 
-    encoded_doc: pre-processed tokenized document
-    sentences_per_doc: document length
-    words_per_each_sentence: sentence lengths
-'''
-def prepro_doc(document, word_map):
+    word_map : Dict[str, int]
+        Word2ix map
 
+    Returns
+    -------
+    encoded_doc : torch.LongTensor
+        Pre-processed tokenized document
+
+    sentences_per_doc : torch.LongTensor
+        Document lengths
+
+    words_per_each_sentence : torch.LongTensor
+        Sentence lengths
+    """
     # tokenizers
     sent_tokenizer = PunktSentenceTokenizer()
     word_tokenizer = TreebankWordTokenizer()
@@ -72,20 +83,28 @@ def prepro_doc(document, word_map):
 
     return encoded_doc, sentences_per_doc, words_per_each_sentence
 
+def prepro_sent(
+    text: str, word_map: Dict[str, int]
+) -> Tuple[torch.LongTensor, torch.LongTensor]:
+    """
+    Preprocess a sentence
 
-'''
-preprocess a sentence
+    Parameters
+    ----------
+    text : str
+        A sentence in text form
 
-input param:
-    text (str): a sentence in text form
-    word_map: word2ix map
+    word_map : Dict[str, int]
+        Word2ix map
 
-return: 
-    encoded_sent: pre-processed tokenized sentence
-    words_per_sentence: sentence length
-'''
-def prepro_sent(text, word_map):
-    
+    Returns
+    -------
+    encoded_sent : torch.LongTensor
+        Pre-processed tokenized sentence
+
+    words_per_sentence : torch.LongTensor
+        Sentence lengths
+    """
     # tokenizers
     word_tokenizer = TreebankWordTokenizer()
 
@@ -104,47 +123,59 @@ def prepro_sent(text, word_map):
 
     return encoded_sent, words_per_sentence
 
+def classify(
+    text: str, model: nn.Module, model_name: str, dataset_name: str, word_map: Dict[str, int]
+) -> str:
+    """
+    Classify a text using the given model.
 
-'''
-classify a text with the given model
+    Parameters
+    ----------
+    text : str
+        A document or sentence in text form
 
-input param:
-    document: a document in text form
-    model: a trained model
-    model_name: model name
-    dataset_name: dataset name
-    word_map: word2ix map
+    model : nn.Module
+        A loaded model
 
-return: 
-    prediction: the predicted category with its probability
-'''
-def classify(document, model, model_name, dataset_name, word_map):
+    model_name : str
+        Name of the model
 
+    dataset_name : str
+        Name of the dataset
+
+    word_map : Dict[str, int]
+        Word2ix map
+
+    Returns
+    -------
+    prediction : str
+        The predicted category with its probability
+    """
     _, rev_label_map = get_label_map(dataset_name)
 
     if model_name in ['han']:
         # preprocess document
-        encoded_doc, sentences_per_doc, words_per_each_sentence = prepro_doc(document, word_map)
+        encoded_doc, sentences_per_doc, words_per_each_sentence = prepro_doc(text, word_map)
         # run through model
         scores, word_alphas, sentence_alphas = model(
-            encoded_doc, 
+            encoded_doc,
             sentences_per_doc,
             words_per_each_sentence
         )  # (1, n_classes), (1, n_sentences, max_sent_len_in_document), (1, n_sentences)
     else:
         # preprocess sentence
-        encoded_sent, words_per_sentence = prepro_sent(document, word_map)
+        encoded_sent, words_per_sentence = prepro_sent(text, word_map)
         # run through model
         scores = model(encoded_sent, words_per_sentence)
 
     scores = scores.squeeze(0)  # (n_classes)
-    scores = nn.functional.softmax(scores, dim = 0)  # (n_classes)
-    
+    scores = nn.functional.softmax(scores, dim=0)  # (n_classes)
+
     # find best prediction and its probability
-    score, prediction = scores.max(dim = 0)
+    score, prediction = scores.max(dim=0)
 
     prediction = 'Category: {category}, Probability: {score:.2f}%'.format(
-        category = rev_label_map[prediction.item()], 
+        category = rev_label_map[prediction.item()],
         score = score.item() * 100
     )
     return prediction
@@ -157,7 +188,6 @@ def classify(document, model, model_name, dataset_name, word_map):
 
 
 if __name__ == '__main__':
-    
     text = 'How do computers work? I have a CPU I want to use. But my keyboard and motherboard do not help.\n\n You can just google how computers work. Honestly, its easy.'
     # text = 'But think about it! It\'s so cool. Physics is really all about math. what feynman said, hehe'
     # text = "I think I'm falling sick. There was some indigestion at first. But now a fever is beginning to take hold."

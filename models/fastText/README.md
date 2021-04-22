@@ -6,6 +6,7 @@ This folder contains the implemention of fastText proposed in:
 
 It is a simple text classification model with the ability to give comparable performance to much complex neural network based models.
 
+
 &nbsp;
 
 ## Overview
@@ -20,6 +21,7 @@ It is a simple text classification model with the ability to give comparable per
 
 4. **Classification.** Feed the output into a **hierarchical softmax** function to compute the probability distribution of all classes.
 
+
 &nbsp;
 
 ## Implementation Details
@@ -29,6 +31,7 @@ Here are somethings different from the original paper:
 - I used normal softmax instead of hierarchical softmax
 - I didn't use ngram embeddings
 - I used pre-trained GloVe embeddings for embedding words
+
 
 &nbsp;
 

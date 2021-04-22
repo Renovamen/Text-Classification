@@ -1,12 +1,11 @@
-from datasets.preprocess import sentence, document
-from utils import opts
+from datasets import run_doc_prepro, run_sent_prepro
+from utils import parse_opt
 
 if __name__ == '__main__':
-
-    config = opts.parse_opt()
+    config = parse_opt()
 
     if config.model_name in ['han']:
-        document.run_prepro(
+        run_doc_prepro(
             csv_folder = config.dataset_path,
             output_folder = config.output_path,
             word_limit = config.word_limit,
@@ -14,7 +13,7 @@ if __name__ == '__main__':
             min_word_count = config.min_word_count
         )
     else:
-        sentence.run_prepro(
+        run_sent_prepro(
             csv_folder = config.dataset_path,
             output_folder = config.output_path,
             word_limit = config.word_limit,

@@ -1,41 +1,70 @@
 import torch
 from torch import nn
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence, PackedSequence
-from .attention import *
 
-'''
-attention-based bidirectional LSTM
+from .attention import Attention
 
-attributes:
-    n_classes: number of classes
-    vocab_size: number of words in the vocabulary of the model
-    embeddings: word embedding weights
-    emb_size: size of word embeddings
-    fine_tune: allow fine-tuning of embedding layer?
-               (only makes sense when using pre-trained embeddings)
-    rnn_size: size of bi-LSTM
-    rnn_layers: number of layers in bi-LSTM
-    dropout: dropout
-'''
 class AttBiLSTM(nn.Module):
+    """
+    Implementation of Attention-based bidirectional LSTM proposed in paper [1].
 
-    def __init__(self, n_classes, vocab_size, embeddings, emb_size, fine_tune,
-                 rnn_size, rnn_layers, dropout):
+    Parameters
+    ----------
+    n_classes : int
+        Number of classes
 
+    vocab_size : int
+        Number of words in the vocabulary
+
+    embeddings : torch.Tensor
+        Word embedding weights
+
+    emb_size : int
+        Size of word embeddings
+
+    fine_tune : bool
+        Allow fine-tuning of embedding layer? (only makes sense when using
+        pre-trained embeddings)
+
+    rnn_size : int
+        Size of Bi-LSTM
+
+    rnn_layers : int
+        Number of layers in Bi-LSTM
+
+    dropout : float
+        Dropout
+
+    References
+    ----------
+    1. "`Attention-Based Bidirectional Long Short-Term Memory Networks for Relation Classification. \
+        <https://www.aclweb.org/anthology/P16-2034.pdf>`_" Peng Zhou, et al. ACL 2016.
+    """
+    def __init__(
+        self,
+        n_classes: int,
+        vocab_size: int,
+        embeddings: torch.Tensor,
+        emb_size: int,
+        fine_tune: bool,
+        rnn_size: int,
+        rnn_layers: int,
+        dropout: float
+    ) -> None:
         super(AttBiLSTM, self).__init__()
 
         self.rnn_size = rnn_size
-        
+
         # embedding layer
         self.embeddings = nn.Embedding(vocab_size, emb_size)
         self.set_embeddings(embeddings, fine_tune)
 
         # bidirectional LSTM
         self.BiLSTM = nn.LSTM(
-            emb_size, rnn_size, 
-            num_layers = rnn_layers, 
+            emb_size, rnn_size,
+            num_layers = rnn_layers,
             bidirectional = True,
-            dropout = (0 if rnn_layers == 1 else dropout), 
+            dropout = (0 if rnn_layers == 1 else dropout),
             batch_first = True
         )
 
@@ -44,39 +73,46 @@ class AttBiLSTM(nn.Module):
 
         self.tanh = nn.Tanh()
         self.dropout = nn.Dropout(dropout)
-        self.softmax = nn.Softmax(dim = 1)
+        self.softmax = nn.Softmax(dim=1)
 
+    def set_embeddings(self, embeddings: torch.Tensor, fine_tune: bool = True) -> None:
+        """
+        Set weights for embedding layer
 
-    '''
-    set weights of embedding layer
+        Parameters
+        ----------
+        embeddings : torch.Tensor
+            Word embeddings
 
-    input param:
-        embeddings: word embeddings
-        fine_tune: allow fine-tuning of embedding layer? 
-                   (only makes sense when using pre-trained embeddings)
-    '''
-    def set_embeddings(self, embeddings, fine_tune = True):
+        fine_tune : bool, optional, default=True
+            Allow fine-tuning of embedding layer? (only makes sense when using
+            pre-trained embeddings)
+        """
         if embeddings is None:
             # initialize embedding layer with the uniform distribution
             self.embeddings.weight.data.uniform_(-0.1, 0.1)
         else:
             # initialize embedding layer with pre-trained embeddings
-            self.embeddings.weight = nn.Parameter(embeddings, requires_grad = fine_tune)
+            self.embeddings.weight = nn.Parameter(embeddings, requires_grad=fine_tune)
 
+    def forward(self, text: torch.Tensor, words_per_sentence: torch.Tensor) -> torch.Tensor:
+        """
+        Parameters
+        ----------
+        text : torch.Tensor (batch_size, word_pad_len)
+            Input data
 
-    '''
-    input param:
-        text: input data (batch_size, word_pad_len)
-        words_per_sentence: sentence lengths (batch_size)
+        words_per_sentence : torch.Tensor (batch_size)
+            Sentence lengths
 
-    return: 
-        scores: class scores (batch_size, n_classes)
-    '''
-    def forward(self, text, words_per_sentence):
-        
+        Returns
+        -------
+        scores : torch.Tensor (batch_size, n_classes)
+            Class scores
+        """
         # word embedding, apply dropout
         embeddings = self.dropout(self.embeddings(text)) # (batch_size, word_pad_len, emb_size)
-        
+
         # pack sequences (remove word-pads, SENTENCES -> WORDS)
         packed_words = pack_padded_sequence(
             embeddings,
@@ -84,10 +120,10 @@ class AttBiLSTM(nn.Module):
             batch_first = True,
             enforce_sorted = False
         )  # a PackedSequence object, where 'data' is the flattened words (n_words, emb_size)
-        
+
         # run through bidirectional LSTM (PyTorch automatically applies it on the PackedSequence)
         rnn_out, _ = self.BiLSTM(packed_words)  # a PackedSequence object, where 'data' is the output of the LSTM (n_words, 2 * rnn_size)
-        
+
         # unpack sequences (re-pad with 0s, WORDS -> SENTENCES)
         rnn_out, _ = pad_packed_sequence(rnn_out, batch_first = True)  # (batch_size, word_pad_len, 2 * word_rnn_size)
 

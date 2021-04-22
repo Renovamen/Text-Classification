@@ -2,11 +2,12 @@
 
 This folder contains the implemention of Transformer proposed in paper:
 
-**Attention Is All You Need.** *Ashish Vaswani, et al.* NIPS 2017. [[Paper]]([Paper]) [[Code]](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py)
+**Attention Is All You Need.** *Ashish Vaswani, et al.* NIPS 2017. [[Paper]]([https://arxiv.org/abs/1706.03762]) [[Code]](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py)
 
 Here are my [notes](https://renovamen.ink/2020/07/17/transformer/) of Transformer (Chinese). 
 
 Only the encoder part of Transformer is used. Some modificaitons have been made to make the Transformer work for text classification task.
+
 
 &nbsp;
 

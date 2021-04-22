@@ -1,23 +1,40 @@
-from .HAN import *
-from .fastText import *
-from .AttBiLSTM import *
-from .TextCNN import *
-from .Transformer import *
-from utils import *
+import torch
 
-'''
-setup a model
+from .HAN import HAN
+from .fastText import fastText
+from .AttBiLSTM import AttBiLSTM
+from .TextCNN import TextCNN1D, TextCNN2D
+from .Transformer import Transformer
+from utils.opts import Config
 
-input params:
-    config (Class): config settings
-    n_classes: number of classes 
-    vocab_size: size of vocabulary
-    embeddings: word embeddings
-    emb_size: size of word embeddings
-'''
-def setup(config, n_classes, vocab_size, embeddings, emb_size):
+def make(
+    config: Config,
+    n_classes: int,
+    vocab_size: int,
+    embeddings: torch.Tensor,
+    emb_size: int
+) -> torch.nn.Module:
+    """
+    Make a model
 
-    if config.model_name == 'han': 
+    Parameters
+    ----------
+    config : Config
+        Configuration settings
+
+    n_classes : int
+        Number of classes
+
+    vocab_size : int
+        Size of vocabulary
+
+    embeddings : torch.Tensor
+        Word embedding weights
+
+    emb_size : int
+        Size of word embeddings
+    """
+    if config.model_name == 'han':
         model = HAN(
             n_classes = n_classes,
             vocab_size = vocab_size,
@@ -88,11 +105,11 @@ def setup(config, n_classes, vocab_size, embeddings, emb_size):
             word_pad_len = config.word_limit,
             fine_tune = config.fine_tune_word_embeddings,
             hidden_size = config.hidden_size,
-            n_heads = config.n_heads, 
+            n_heads = config.n_heads,
             n_encoders = config.n_encoders,
             dropout = config.dropout
         )
     else:
         raise Exception("Model not supported: ", config.model_name)
-    
+
     return model

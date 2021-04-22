@@ -1,2 +1,2 @@
-from .cnn1d import *
-from .cnn2d import *
+from .cnn1d import TextCNN1D
+from .cnn2d import TextCNN2D

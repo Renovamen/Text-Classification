@@ -1,8 +1,9 @@
-'''
-preprocess data for sentence classification
-'''
+"""
+Preprocess data for sentence classification.
+"""
 
 import torch
+from typing import Tuple, Dict
 from collections import Counter
 from nltk.tokenize import PunktSentenceTokenizer, TreebankWordTokenizer
 from tqdm import tqdm
@@ -10,40 +11,37 @@ import pandas as pd
 import os
 import json
 
+from .utils import get_clean_text
+
 # tokenizers
 word_tokenizer = TreebankWordTokenizer()
 
-'''
-preprocess text for being used in the model, including lower-casing, standardizing newlines and removing junk
+def read_csv(csv_folder: str, split: str, word_limit: int) -> Tuple[list, list, Counter]:
+    """
+    Read CSVs containing raw training data, clean sentences and labels, and do
+    a word-count.
 
-input param:
-    text: a string
-return: 
-    clean_text: a cleaner string
-'''
-def get_clean_text(text):
+    Parameters
+    ----------
+    csv_folder : str
+        Folder containing the dataset in CSV format files
 
-    if isinstance(text, float):
-        return ''
+    split : str
+        'train' or 'test' split?
 
-    clean_text = text.lower().replace('<br />', '\n').replace('<br>', '\n').replace('\\n', '\n').replace('&#xd;', '\n')
-    return clean_text
+    word_limit : int
+        Truncate long sentences to these many words
 
+    Returns
+    -------
+    sents : list
+        Sentences ([ word1, ..., wordn ])
 
-'''
-read CSVs containing raw training data, clean documents and labels, and do a word-count
+    labels : list
+        List of label of each sentence
 
-input param:
-    csv_folder: folder containing the CSV
-    split: train or test CSV?
-    word_limit: truncate long sentences to these many words
-return: 
-    sents(list): sentences ([ word1, ..., wordn ])
-    labels(list): labels for each sentence
-    word_counter: a word-count
-'''
-def read_csv(csv_folder, split, word_limit):
-
+    word_counter : Counter
+    """
     assert split in {'train', 'test'}
 
     sents = []
@@ -70,20 +68,31 @@ def read_csv(csv_folder, split, word_limit):
 
     return sents, labels, word_counter
 
+def encode_and_pad(
+    input_sents: list, word_map: Dict[str, int], word_limit: int
+) -> Tuple[list, list]:
+    """
+    Encode sentences, and pad them to fit word_limit.
 
-'''
-encode sentences, and pad them to fit word_limit
+    Parameters
+    ----------
+    input_sents : list
+        Sentences ([ word1, ..., wordn ])
 
-input param: 
-    input_sents(list): sentences ([ word1, ..., wordn ])
-    word_map: word map (word2ix)
-    word_limit: max number of words in a sentence
+    word_map : Dict[str, int]
+        Word2ix map
 
-return:
-    encoded_sents: encoded and padded sentences
-    words_per_sentence
-'''
-def encode_and_pad(input_sents, word_map, word_limit):
+    word_limit : int
+        Max number of words in a sentence
+
+    Returns
+    -------
+    encoded_sents : list
+        Encoded and padded sentences
+
+    words_per_sentence : list
+        Number of words per sentence
+    """
     encoded_sents = list(
         map(lambda s: list(
             map(lambda w: word_map.get(w, word_map['<unk>']), s)
@@ -92,18 +101,26 @@ def encode_and_pad(input_sents, word_map, word_limit):
     words_per_sentence = list(map(lambda s: len(s), input_sents))
     return encoded_sents, words_per_sentence
 
+def run_prepro(
+    csv_folder: str, output_folder: str, word_limit: int, min_word_count: int = 5
+) -> None:
+    """
+    Create data files to be used for training the model.
 
-'''
-create data files to be used for training the model
+    Parameters
+    ----------
+    csv_folder : str
+        Folder where the CSVs with the raw data are located
 
-input param: 
-    csv_folder: folder where the CSVs with the raw data are located
-    output_folder: folder where files must be created
-    word_limit: truncate long sentences to these many words
-    min_word_count: discard rare words which occur fewer times than this number
-'''
-def run_prepro(csv_folder, output_folder, word_limit, min_word_count = 5):
+    output_folder : str
+        Folder where files must be created
 
+    word_limit : int
+        Truncate long sentences to these many words
+
+    min_word_count : int
+        Discard rare words which occur fewer times than this number
+    """
     # --------------------- training data ---------------------
     print('\nTraining data: reading and preprocessing...\n')
     train_sents, train_labels, word_counter = read_csv(csv_folder, 'train', word_limit)

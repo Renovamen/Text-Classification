@@ -1,1 +1,1 @@
-from .att_bilstm import *
+from .att_bilstm import AttBiLSTM

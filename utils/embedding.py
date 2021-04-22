@@ -1,34 +1,48 @@
 import os
-import torch
-from torch import nn
-import numpy as np
 from tqdm import tqdm
+from typing import Dict, Tuple
+import numpy as np
+import torch
 
+def init_embeddings(embeddings: torch.Tensor) -> None:
+    """
+    Fill embedding tensor with values from the uniform distribution.
 
-'''
-initialize embedding tensor with values from the uniform distribution
+    Parameters
+    ----------
+    embeddings : torch.Tensor
+        Word embedding tensor
+    """
+    bias = np.sqrt(3.0 / embeddings.size(1))
+    torch.nn.init.uniform_(embeddings, -bias, bias)
 
-input param:
-    input_embedding: embedding tensor
-'''
-def init_embedding(input_embedding):
-    bias = np.sqrt(3.0 / input_embedding.size(1))
-    nn.init.uniform_(input_embedding, -bias, bias)
+def load_embeddings(
+    emb_file: str,
+    word_map: Dict[str, int],
+    output_folder: str
+) -> Tuple[torch.Tensor, int]:
+    """
+    Create an embedding tensor for the specified word map, for loading into the model.
 
+    Parameters
+    ----------
+    emb_file : str
+        File containing embeddings (stored in GloVe format)
 
-'''
-load pre-trained word embeddings (Glove) for words in the word map
+    word_map : Dict[str, int]
+        Word2id map
 
-input params:
-    emb_file: path to the file containing embeddings (stored in Glove format)
-    word_map: word map
-    output_folder: path of the folder to store output files
+    output_folder : str
+        Path to the folder to store output files
 
-return: 
-    embeddings in the same order as the words in the word map, dimension of embeddings
-'''
-def load_embeddings(emb_file, word_map, output_folder):
-    
+    Returns
+    -------
+    embeddings : torch.Tensor
+        Embeddings in the same order as the words in the word map
+
+    embed_dim : int
+        Dimension of the embeddings
+    """
     emb_basename = os.path.basename(emb_file)
     cache_path = os.path.join(output_folder, emb_basename + '.pth.tar')
 
@@ -36,14 +50,14 @@ def load_embeddings(emb_file, word_map, output_folder):
     if not os.path.isfile(cache_path):
         # find embedding dimension
         with open(emb_file, 'r') as f:
-            emb_size = len(f.readline().split(' ')) - 1
-            num_lines = len(f.readlines()) 
+            embed_dim = len(f.readline().split(' ')) - 1
+            num_lines = len(f.readlines())
 
         vocab = set(word_map.keys())
 
         # create tensor to hold embeddings, initialize
-        embeddings = torch.FloatTensor(len(vocab), emb_size)
-        init_embedding(embeddings)
+        embeddings = torch.FloatTensor(len(vocab), embed_dim)
+        init_embeddings(embeddings)
 
         # read embedding file
         for line in tqdm(open(emb_file, 'r'), total = num_lines, desc = 'Loading embeddings'):
@@ -60,11 +74,11 @@ def load_embeddings(emb_file, word_map, output_folder):
 
         # create cache file so we can load it quicker the next time
         print('Saving vectors to {}'.format(cache_path))
-        torch.save((embeddings, emb_size), cache_path)
+        torch.save((embeddings, embed_dim), cache_path)
 
     # load embeddings from cache
     else:
         print('Loading embeddings from {}'.format(cache_path))
-        embeddings, emb_size = torch.load(cache_path)
+        embeddings, embed_dim = torch.load(cache_path)
 
-    return embeddings, emb_size
+    return embeddings, embed_dim
