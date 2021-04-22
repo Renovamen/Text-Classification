@@ -22,7 +22,7 @@ emb_size: 256  # word embedding size
 fine_tune_word_embeddings: True  # fine-tune word embeddings?
 
 # model parameters
-n_heads: 8  # number of attention heads
+n_heads: 5  # number of attention heads
 n_encoders: 2  # number of encoder layers
 hidden_size: 512  # size of position-wise feed forward network
 dropout: 0.3  # dropout
