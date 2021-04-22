@@ -1,6 +1,6 @@
 # fastText
 
-This folder contains the implemention of fastText proposed in:
+Implementation of fastText proposed in paper:
 
 **Bag of Tricks for Efficient Text Classification.** *Armand Joulin, et al.* EACL 2017. [[Paper]](https://www.aclweb.org/anthology/E17-2068.pdf) [[Code]](https://github.com/facebookresearch/fastText)
 
@@ -11,14 +11,11 @@ It is a simple text classification model with the ability to give comparable per
 
 ## Overview
 
-![fastText](../../docs/img/fastText.png)
+![fastText](../../notes/img/fastText.png)
 
 1. **Embedding.** Embed **bags of ngram** to word embeddings.
-
 2. **Hidden.** Average word embeddings into sentence embeddings.
-
 3. **Output.** Feed sentence embeddings into a linear classifier with 10 hidden units.
-
 4. **Classification.** Feed the output into a **hierarchical softmax** function to compute the probability distribution of all classes.
 
 

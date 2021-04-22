@@ -1,10 +1,10 @@
 # Transformer
 
-This folder contains the implemention of Transformer proposed in paper:
+Implementation of Transformer proposed in paper:
 
 **Attention Is All You Need.** *Ashish Vaswani, et al.* NIPS 2017. [[Paper]]([https://arxiv.org/abs/1706.03762]) [[Code]](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py)
 
-Here are my [notes](https://renovamen.ink/2020/07/17/transformer/) of Transformer (Chinese). 
+Here are my [notes](https://renovamen.ink/post/2020/07/17/transformer/) on Transformer (Chinese). 
 
 Only the encoder part of Transformer is used. Some modificaitons have been made to make the Transformer work for text classification task.
 
@@ -13,7 +13,7 @@ Only the encoder part of Transformer is used. Some modificaitons have been made 
 
 ## Overview
 
-![Transformer](../../docs/img/Transformer.png)
+![Transformer](../../notes/img/Transformer.png)
 
 Transformer is an encoder-decoder architecture based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. It is firstly proposed for machine translation task.
 

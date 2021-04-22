@@ -1,6 +1,6 @@
 # TextCNN
 
-This folder contains the implemention of Hierarchical Attention Networks proposed in paper:
+Implementation of TextCNN proposed in paper:
 
 **Convolutional Neural Networks for Sentence Classification.** *Yoon Kim.* EMNLP 2014. [[Paper]](https://www.aclweb.org/anthology/D14-1181.pdf) [[Code]](https://github.com/yoonkim/CNN_sentence)
 
@@ -11,7 +11,7 @@ It applies CNN to text classification problem.
 
 ## Overview
 
-![TextCNN](../../docs/img/TextCNN.png)
+![TextCNN](../../notes/img/TextCNN.png)
 
 - Two channels of word vectors: a **static** one (frozen during backprop) and a **non-static** one (fine-tuned via backprop)
 - **Convolution:** Multiple filters are used to obtain multiple features, one feature is extracted from one filter.

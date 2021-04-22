@@ -1,6 +1,6 @@
 # Datasets
 
-Here is something about classification datasets.
+Here are some notes of the classification datasets.
 
 It will be much easier to preprocess and load data via [torchtext](https://github.com/pytorch/text), check out its documentation [here](https://pytorch.org/text/).
 
@@ -21,6 +21,7 @@ Here are statistics of some popular classification datasets:
 | SST-5                  | 5       | /             | /            | 56.4k     | [Link](http://nlp.stanford.edu/sentiment/trainDevTestTrees_PTB.zip) |
 | TREC                   | 6 / 50  | 5,452         | 500          | 5,952     | [Link](https://cogcomp.seas.upenn.edu/Data/QA/QC/)           |
 
+
 &nbsp;
 
 ## Text Classification
@@ -28,8 +29,6 @@ Here are statistics of some popular classification datasets:
 All of the following datasets can be downloaded [here](https://drive.google.com/drive/u/0/folders/0Bz8a_Dbh9Qhbfll6bVpmNUtUcFdjYmF2SEpmZUZUcVNiMUw1TWN6RDV3a0JHT3kxLVhVR2M) (Google Drive). They are proposed and described in this paper:
 
 [**Character-level Convolutional Networks for Text Classification.**](https://papers.nips.cc/paper/5782-character-level-convolutional-networks-for-text-classification.pdf) *Xiang Zhang, et al.* NIPS 2015.
-
-&nbsp;
 
 - **AG News**
 
@@ -79,6 +78,7 @@ All of the following datasets can be downloaded [here](https://drive.google.com/
 
   **2 Classes:** 0: Negative polarity, 1: Positive polarity
 
+
 &nbsp;
 
 ## Sentiment Analysis
@@ -112,6 +112,7 @@ All of the following datasets can be downloaded [here](https://drive.google.com/
     **samples:**  56.4k
 
     **Description:**  Same as SST-5 but with neutral reviews removed and binary labels.
+
 
 &nbsp;
 

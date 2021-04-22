@@ -2,10 +2,12 @@
 
 PyTorch re-implementation of some text classificaiton models.
 
-&nbsp;
-## Model List
 
-You can train following models by configuring `model_name` in config files ([here](https://github.com/Renovamen/Text-Classification/tree/master/configs) are some example config files). Check out their links for more info.
+&nbsp;
+
+## Supported Models
+
+Train the following models by editing `model_name` item in config files ([here](https://github.com/Renovamen/Text-Classification/tree/master/configs) are some example config files). Click the link of each for details.
 
 - [**Hierarchical Attention Networks (HAN)**](https://github.com/Renovamen/Text-Classification/tree/master/models/HAN) (`han`)
 
@@ -26,56 +28,56 @@ You can train following models by configuring `model_name` in config files ([her
 - [**Transformer**](https://github.com/Renovamen/Text-Classification/tree/master/models/Transformer) (`transformer`)
 
     **Attention Is All You Need.** *Ashish Vaswani, et al.* NIPS 2017. [[Paper]](https://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf) [[Code]](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py)
-    
-    Here only the encoder part of Transformer is used.
-
-&nbsp;
-## Environment
-
-- Python 3.7
-
-- [PyTorch](https://pytorch.org/) 1.5.0
-
-- [Tensorflow](https://www.tensorflow.org/) 2.0.0 (optional, you don't need this if you disable [tensorboard](https://github.com/tensorflow/tensorboard))
 
 
 &nbsp;
+
+## Requirements
+
+First, make sure your environment is installed with:
+
+- Python >= 3.5
+
+Then install requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+
+&nbsp;
+
 ## Dataset
 
 Currently, the following datasets proposed in [this paper](https://papers.nips.cc/paper/5782-character-level-convolutional-networks-for-text-classification.pdf) are supported:
 
 - AG News   
-
 - DBpedia
-
 - Yelp Review Polarity
-
 - Yelp Review Full
-
 - Yahoo Answers
-
 - Amazon Review Full
-
 - Amazon Review Polarity
 
-And all of them can be download [here](https://drive.google.com/drive/u/0/folders/0Bz8a_Dbh9Qhbfll6bVpmNUtUcFdjYmF2SEpmZUZUcVNiMUw1TWN6RDV3a0JHT3kxLVhVR2M) (Google Drive). Check out [here](docs/datasets.md) for more info about these datasets.
+All of them can be download [here](https://drive.google.com/drive/u/0/folders/0Bz8a_Dbh9Qhbfll6bVpmNUtUcFdjYmF2SEpmZUZUcVNiMUw1TWN6RDV3a0JHT3kxLVhVR2M) (Google Drive). Click [here](notes/datasets.md) for details of these datasets.
 
 You should download and unzip them first, then set their path (`dataset_path`) in your config files. If you would like to use other datasets, they may have to be stored in the same format as the above mentioned datasets.
 
+
 &nbsp;
+
 ## Pre-trained Word Embeddings
 
-If you would like to use pre-trained word embeddings (like [GloVe](https://github.com/stanfordnlp/GloVe)), just set `emb_pretrain = True` and the path to the pre-trained vectors file (`emb_folder` and `emb_filename`) in your config files. You could also choose to fine-tune or not with the `fine_tune_embeddings` parameter.
+If you would like to use pre-trained word embeddings (like [GloVe](https://github.com/stanfordnlp/GloVe)), just set `emb_pretrain` to `True` and specify the path to pre-trained vectors (`emb_folder` and `emb_filename`) in your config files. You could also choose to fine-tune word embeddings or not with by editing `fine_tune_embeddings` item.
 
-The `load_embeddings` method (in [`utils/embedding.py`](utils/embedding.py)) would create a cache under folder `dataset_output_path`, so that it could load the embeddings quicker the next time.
-
-Or if you want to randomly initialize the embedding layer's weights, set `emb_pretrain = False` and specify the size of embedding layer (`embed_size`).
+Or if you want to randomly initialize the embedding layer's weights, set `emb_pretrain` to `False` and specify the embedding size (`embed_size`).
 
 
 &nbsp;
+
 ## Preprocess
 
-Although [torchtext](https://github.com/pytorch/text) can be used to perform data preprocessing easily, it loads all data in one go and occupies too much memory and slows down the training speed, expecially when the dataset is big. 
+Although [torchtext](https://github.com/pytorch/text) can be used to preprocess data easily, it loads all data in one go and occupies too much memory and slows down the training speed, expecially when the dataset is big. 
 
 Therefore, here I preprocess the data manually and store them locally first (where `configs/test.yaml` is the path to your config file):
 
@@ -91,6 +93,7 @@ The preprocessing including encoding and padding sentences and building word2ix 
 
 
 &nbsp;
+
 ## Train
 
 To train a model, just run:
@@ -109,18 +112,19 @@ tensorboard --logdir=<your_log_dir>
 
 ## Test
 
-Test the trained model and compute accuracy on test set:
+Test a checkpoint and compute accuracy on test set:
 
 ```bash
 python test.py --config configs/example.yaml
 ```
 
 &nbsp;
+
 ## Classify
 
-This is for when you have already trained a model and want to predict a category for a specific sentence:
+To predict the category for a specific sentence:
 
-First modify following things in [`classify.py`](classify.py):
+First edit the following items in [`classify.py`](classify.py):
 
 ```python
 checkpoint_path = 'str: path_to_your_checkpoint'
@@ -139,7 +143,9 @@ Then, run:
 python classify.py
 ```
 
+
 &nbsp;
+
 ## Performance
 
 Here I report the test accuracy (%) and training time per epoch (on RTX 2080 Ti) of each model on various datasets. Model parameters are not carefully tuned, so better performance can be achieved by some parameter tuning.
@@ -154,6 +160,22 @@ Here I report the test accuracy (%) and training time per epoch (on RTX 2080 Ti)
 
 
 &nbsp;
+
+## Notes
+
+- The `load_embeddings` method (in [`utils/embedding.py`](utils/embedding.py)) would try to create a cache for loaded embeddings under folder `dataset_output_path`. This dramatically speeds up the loading time the next time.
+- Only the encoder part of Transformer is used.
+
+
+&nbsp;
+
+## License
+
+[MIT](LICENSE)
+
+
+&nbsp;
+
 ## Acknowledgement
 
-This project is based on [sgrvinod/a-PyTorch-Tutorial-to-Text-Classification](https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Text-Classification), thanks for this great work.
+This project is based on [sgrvinod/a-PyTorch-Tutorial-to-Text-Classification](https://github.com/sgrvinod/a-PyTorch-Tutorial-to-Text-Classification).

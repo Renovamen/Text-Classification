@@ -1,17 +1,17 @@
 # HAN (Hierarchical Attention Network)
 
-This folder contains the implemention of Hierarchical Attention Networks proposed in paper:
+Implementation of Hierarchical Attention Networks proposed in paper:
 
 **Hierarchical Attention Networks for Document Classification.** *Zichao Yang, et al.* NAACL 2016. [[Paper]](https://www.aclweb.org/anthology/N16-1174.pdf)
 
-Here are my [notes](https://renovamen.ink/2020/06/10/text-classification-papers/#hierarchical-attention-network) (Chinese). 
+Here are my [notes](https://renovamen.ink/post/2020/03/17/papers-reading/#hierarchical-attention-network) (Chinese). 
 
 
 &nbsp;
 
 ## Overview
 
-![HAN](../../docs/img/HAN.png)
+![HAN](../../notes/img/HAN.png)
 
 Hierarchical Attention Network constructs a hierarchical document representation by first building representations of sentences and then aggregating those into a document representation.
 
